@@ -2,14 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Account.h"
-#include "SavingsAccount.h"
-#include "CheckingAccount.h"
+#include <memory>
+#include "MiniBank.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
+namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -21,15 +18,16 @@ public:
     ~MainWindow();
 
 private slots:
-    void deposit();      // Slot voor deposit knop
-    void withdraw();     // Slot voor withdraw knop
-    void addInterest();  // Slot voor interest knop
+    void deposit();
+    void withdraw();
+    void addInterest();
+    void refreshDisplay();
 
 private:
     Ui::MainWindow *ui;
-
-    MiniBank::SavingsAccount* sa;   // Pointer naar SavingsAccount
-    MiniBank::CheckingAccount* ca;  // Pointer naar CheckingAccount
+    std::unique_ptr<MiniBank::MiniBank> bank;
+    MiniBank::Account* currentAccount{nullptr};
+    std::string currentAccountId;
 };
 
 #endif // MAINWINDOW_H
