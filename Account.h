@@ -1,47 +1,60 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
-#pragma once
 #include <string>
-#include <iostream>
 #include <stdexcept>
 
 namespace MiniBank {
 
+using uint8 = unsigned char;
+
 class Account {
 protected:
-    std::string accountNumber;  // Uniek nummer van de rekening
-    double balance;             // Saldo van de rekening
+    std::string accountNumber;
+    std::string owner;
+    double balance;
+    uint8 accountType{0};
 
 public:
-    // 1. Default constructor
-    Account() : accountNumber("000000"), balance(0.0) {}
+    // Default constructor
+    Account() : accountNumber("000000"), owner("unknown"), balance(0.0), accountType(0) {}
 
-    // 2. Parameterized constructor
-    Account(const std::string& accNum, double bal = 0.0)
-        : accountNumber(accNum), balance(bal) {}
+    // Parameterized constructor
+    Account(const std::string& accNum, const std::string& ownerName, double bal = 0.0, uint8 type = 0)
+        : accountNumber(accNum), owner(ownerName), balance(bal), accountType(type) {}
 
-    // 3. Copy constructor
+    // Copy constructor
     Account(const Account& other)
-        : accountNumber(other.accountNumber), balance(other.balance) {}
+        : accountNumber(other.accountNumber), owner(other.owner), balance(other.balance), accountType(other.accountType) {}
 
-    // Destructor
-    virtual ~Account() {}
+    virtual ~Account() = default;
 
-    // Functie om geld te storten
+    // Deposit (common behavior)
     virtual void deposit(double amount) {
-        if(amount <= 0) throw std::invalid_argument("Bedrag moet positief zijn!");
-        balance += amount;
+        if (amount <= 0.0) throw std::invalid_argument("deposit: amount must be positive");
+        this->balance += amount;
     }
 
-    // Functie om geld op te nemen – pure virtual
+    // Withdraw is account-specific
     virtual void withdraw(double amount) = 0;
 
-    // Getters
-    const std::string& getAccountNumber() const { return accountNumber; }
-    double getBalance() const { return balance; }
+    inline const std::string& getAccountNumber() const { return accountNumber; }
+    inline const std::string& getOwner() const { return owner; }
+    inline double getBalance() const { return balance; }
+    inline uint8 getAccountType() const { return accountType; }
+
+    void setOwner(const std::string& newOwner) {
+        if (newOwner.empty()) throw std::invalid_argument("owner cannot be empty");
+        owner = newOwner;
+    }
+
+    // For debugging / logging
+    friend std::ostream& operator<<(std::ostream& os, const Account& a) {
+        os << "[" << a.accountNumber << "] " << a.owner << " : " << a.balance;
+        return os;
+    }
 };
 
-}
+} // namespace MiniBank
 
 #endif // ACCOUNT_H
