@@ -34,7 +34,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Deposit</string>
     </property>
    </widget>
    <widget class="QPushButton" name="withdrawButton">
@@ -47,7 +47,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Withdraw</string>
     </property>
    </widget>
    <widget class="QPushButton" name="interestButton">
@@ -60,7 +60,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Add Interest</string>
     </property>
    </widget>
    <widget class="QLabel" name="balanceLabel">
@@ -68,7 +68,7 @@
      <rect>
       <x>230</x>
       <y>100</y>
-      <width>63</width>
+      <width>300</width>
       <height>20</height>
      </rect>
     </property>
