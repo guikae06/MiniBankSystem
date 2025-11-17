@@ -1,8 +1,8 @@
-#include "mainwindow.h"
+#include "../gui/mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
-#include "SavingsAccount.h"
-#include "CheckingAccount.h"
+#include "../headers/SavingsAccount.h"
+#include "../headers/CheckingAccount.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
