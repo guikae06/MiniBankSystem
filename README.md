@@ -39,26 +39,6 @@ This project manages **checking and savings accounts**, allowing deposits, withd
 
 ---
 
-## Folder Structure
-
-MiniBankSystem/
-├─ Account.h
-├─ CheckingAccount.h
-├─ SavingsAccount.h
-├─ Bank.h
-├─ Account.cpp
-├─ CheckingAccount.cpp
-├─ SavingsAccount.cpp
-├─ Bank.cpp
-├─ main.cpp
-├─ mainwindow.h
-├─ mainwindow.cpp
-├─ mainwindow.ui
-├─ README.md
-└─ MiniBankSystem.pro
-
-
----
 
 ## How to Build
 
