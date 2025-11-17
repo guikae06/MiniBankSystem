@@ -12,7 +12,7 @@ class CheckingAccount : public Account {
 public:
     CheckingAccount() : Account(), overdraftLimit(0.0), transactionFee(0.0) {}
     CheckingAccount(const std::string& accNum, const std::string& ownerName, double bal = 0.0, double overdraft = 200.0, double fee = 0.0)
-        : Account(accNum, ownerName, bal, /*type=*/2), overdraftLimit(overdraft), transactionFee(fee) {}
+        : Account(accNum, ownerName, bal, /*type*/2), overdraftLimit(overdraft), transactionFee(fee) {}
     CheckingAccount(const CheckingAccount& other)
         : Account(other), overdraftLimit(other.overdraftLimit), transactionFee(other.transactionFee) {}
     ~CheckingAccount() override = default;

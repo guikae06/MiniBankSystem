@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <memory>
-#include "MiniBank.h"
+#include "Bank.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,7 +25,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    std::unique_ptr<MiniBank::MiniBank> bank;
+    std::unique_ptr<MiniBank::Bank> bank;
     MiniBank::Account* currentAccount{nullptr};
     std::string currentAccountId;
 };

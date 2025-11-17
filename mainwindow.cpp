@@ -8,7 +8,9 @@
 using namespace MiniBank;
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), bank(std::make_unique<MiniBank>())
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    bank(std::make_unique<MiniBank::Bank>())   // now works, class is Bank
 {
     ui->setupUi(this);
 
@@ -19,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     currentAccountId = "S123";
     currentAccount = bank->findById(currentAccountId);
 
+    // connect UI elements to slots
     connect(ui->depositButton, &QPushButton::clicked, this, &MainWindow::deposit);
     connect(ui->withdrawButton, &QPushButton::clicked, this, &MainWindow::withdraw);
     connect(ui->interestButton, &QPushButton::clicked, this, &MainWindow::addInterest);

@@ -11,7 +11,7 @@ class SavingsAccount : public Account {
 public:
     SavingsAccount() : Account(), interestRate(0.01) {}
     SavingsAccount(const std::string& accNum, const std::string& ownerName, double bal = 0.0, double rate = 0.01)
-        : Account(accNum, ownerName, bal, /*type=*/1), interestRate(rate) {}
+        : Account(accNum, ownerName, bal, /*type*/1), interestRate(rate) {}
     SavingsAccount(const SavingsAccount& other) : Account(other), interestRate(other.interestRate) {}
     ~SavingsAccount() override = default;
 
