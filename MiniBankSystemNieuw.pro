@@ -10,12 +10,16 @@ CONFIG += c++17
 
 SOURCES += \
     Account.cpp \
+    CheckingAccount.cpp \
+    MiniBank.cpp \
+    SavingsAccount.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     Account.h \
     CheckingAccount.h \
+    MiniBank.h \
     SavingsAccount.h \
     mainwindow.h
 
