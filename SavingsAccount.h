@@ -1,34 +1,34 @@
 #ifndef SAVINGSACCOUNT_H
 #define SAVINGSACCOUNT_H
 
-#pragma once
 #include "Account.h"
-#include <iostream>
 
 namespace MiniBank {
 
 class SavingsAccount : public Account {
-    double interestRate; // jaarlijks rentepercentage
+    double interestRate;
+
 public:
-    // Constructor
-    SavingsAccount(const std::string& accNum, double bal, double rate)
-        : Account(accNum, bal), interestRate(rate) {}
+    SavingsAccount() : Account(), interestRate(0.01) {}
+    SavingsAccount(const std::string& accNum, const std::string& ownerName, double bal = 0.0, double rate = 0.01)
+        : Account(accNum, ownerName, bal, /*type=*/1), interestRate(rate) {}
+    SavingsAccount(const SavingsAccount& other) : Account(other), interestRate(other.interestRate) {}
+    ~SavingsAccount() override = default;
 
-    // Implementatie van de pure virtual withdraw functie
     void withdraw(double amount) override {
-        if(amount > balance) {
-            std::cout << "Niet genoeg saldo om op te nemen!\n";
-        } else {
-            balance -= amount;
-        }
+        if (amount <= 0.0) throw std::invalid_argument("withdraw: amount must be positive");
+        if (amount > balance) throw std::runtime_error("SavingsAccount: insufficient funds");
+        balance -= amount;
     }
 
-    // Extra functie om rente toe te voegen
     void addInterest() {
-        balance += balance * interestRate;
+        if (interestRate > 0.0) balance += balance * interestRate;
     }
+
+    double getInterestRate() const { return interestRate; }
+    void setInterestRate(double r) { interestRate = r; }
 };
 
-}
+} // namespace MiniBank
 
 #endif // SAVINGSACCOUNT_H
