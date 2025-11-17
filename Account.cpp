@@ -5,8 +5,8 @@ namespace MiniBank {
 
 std::ostream& operator<<(std::ostream& os, const Account& a)
 {
-    // stream standard C++ types only
-    os << "Account[" << a.accountNumber << "] owner=\"" << a.owner << "\" balance=" << a.balance;
+    os << "Account[" << a.getAccountNumber() << "] owner=\""
+       << a.getOwner() << "\" balance=" << a.getBalance();
     return os;
 }
 

@@ -9,26 +9,17 @@ class SavingsAccount : public Account {
     double interestRate;
 
 public:
-    SavingsAccount() : Account(), interestRate(0.01) {}
-    SavingsAccount(const std::string& accNum, const std::string& ownerName, double bal = 0.0, double rate = 0.01)
-        : Account(accNum, ownerName, bal, /*type*/1), interestRate(rate) {}
-    SavingsAccount(const SavingsAccount& other) : Account(other), interestRate(other.interestRate) {}
-    ~SavingsAccount() override = default;
+    SavingsAccount(const std::string& id_, const std::string& owner_, double bal = 0.0,
+                   double rate = 0.01)
+        : Account(id_, owner_, bal), interestRate(rate) {}
 
-    void withdraw(double amount) override {
-        if (amount <= 0.0) throw std::invalid_argument("withdraw: amount must be positive");
-        if (amount > balance) throw std::runtime_error("SavingsAccount: insufficient funds");
-        balance -= amount;
+    AccountType getAccountType() const override { return AccountType::Savings; }
+
+    void addInterest() override {
+        balance += balance * interestRate;
     }
-
-    void addInterest() {
-        if (interestRate > 0.0) balance += balance * interestRate;
-    }
-
-    double getInterestRate() const { return interestRate; }
-    void setInterestRate(double r) { interestRate = r; }
 };
 
 } // namespace MiniBank
 
-#endif // SAVINGSACCOUNT_H
+#endif

@@ -6,31 +6,34 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1433</width>
-    <height>703</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>MiniBank System</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="amountEdit">
+   <widget class="QLineEdit" name="amountLineEdit">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>30</y>
-      <width>113</width>
-      <height>28</height>
+      <x>150</x>
+      <y>40</y>
+      <width>100</width>
+      <height>25</height>
      </rect>
+    </property>
+    <property name="placeholderText">
+     <string>Amount</string>
     </property>
    </widget>
    <widget class="QPushButton" name="depositButton">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>90</y>
-      <width>90</width>
-      <height>29</height>
+      <x>50</x>
+      <y>80</y>
+      <width>80</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="text">
@@ -40,10 +43,10 @@
    <widget class="QPushButton" name="withdrawButton">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>140</y>
-      <width>90</width>
-      <height>29</height>
+      <x>150</x>
+      <y>80</y>
+      <width>80</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="text">
@@ -53,10 +56,10 @@
    <widget class="QPushButton" name="interestButton">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>190</y>
-      <width>90</width>
-      <height>29</height>
+      <x>250</x>
+      <y>80</y>
+      <width>80</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="text">
@@ -66,28 +69,17 @@
    <widget class="QLabel" name="balanceLabel">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>100</y>
-      <width>300</width>
-      <height>20</height>
+      <x>50</x>
+      <y>130</y>
+      <width>200</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>Balance: 0</string>
     </property>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1433</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

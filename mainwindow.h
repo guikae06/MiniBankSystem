@@ -9,6 +9,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+using namespace MiniBank;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -21,13 +23,11 @@ private slots:
     void deposit();
     void withdraw();
     void addInterest();
-    void refreshDisplay();
 
 private:
     Ui::MainWindow *ui;
-    std::unique_ptr<MiniBank::Bank> bank;
-    MiniBank::Account* currentAccount{nullptr};
-    std::string currentAccountId;
+    std::unique_ptr<Bank> bank;
+    Account* defaultAccount{nullptr};
 };
 
 #endif // MAINWINDOW_H

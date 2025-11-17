@@ -6,30 +6,29 @@
 namespace MiniBank {
 
 class CheckingAccount : public Account {
-    double overdraftLimit;
-    double transactionFee;
+    double overdraft;
+    double fee;
 
 public:
-    CheckingAccount() : Account(), overdraftLimit(0.0), transactionFee(0.0) {}
-    CheckingAccount(const std::string& accNum, const std::string& ownerName, double bal = 0.0, double overdraft = 200.0, double fee = 0.0)
-        : Account(accNum, ownerName, bal, /*type*/2), overdraftLimit(overdraft), transactionFee(fee) {}
-    CheckingAccount(const CheckingAccount& other)
-        : Account(other), overdraftLimit(other.overdraftLimit), transactionFee(other.transactionFee) {}
-    ~CheckingAccount() override = default;
+    CheckingAccount(const std::string& id_, const std::string& owner_, double bal = 0.0,
+                    double overdraft_ = 200.0, double fee_ = 0.0)
+        : Account(id_, owner_, bal), overdraft(overdraft_), fee(fee_) {}
 
-    void withdraw(double amount) override {
-        if (amount <= 0.0) throw std::invalid_argument("withdraw: amount must be positive");
-        double effective = amount + transactionFee;
-        if (balance - effective < -overdraftLimit) throw std::runtime_error("CheckingAccount: overdraft limit exceeded");
-        balance -= effective;
+    AccountType getAccountType() const override { return AccountType::Checking; }
+
+    bool withdraw(double amount) override {
+        if (balance + overdraft >= amount) {
+            balance -= amount;
+            balance -= fee;
+            return true;
+        }
+        return false;
     }
 
-    double getOverdraftLimit() const { return overdraftLimit; }
-    double getTransactionFee() const { return transactionFee; }
-    void setOverdraftLimit(double v) { overdraftLimit = v; }
-    void setTransactionFee(double f) { transactionFee = f; }
+    double getOverdraft() const { return overdraft; }
+    double getFee() const { return fee; }
 };
 
 } // namespace MiniBank
 
-#endif // CHECKINGACCOUNT_H
+#endif

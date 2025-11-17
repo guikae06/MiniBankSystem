@@ -1,93 +1,78 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
-#include <QString>
 #include "SavingsAccount.h"
 #include "CheckingAccount.h"
 
-using namespace MiniBank;
-
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    bank(std::make_unique<MiniBank::Bank>())   // now works, class is Bank
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , bank(std::make_unique<Bank>())
 {
     ui->setupUi(this);
 
-    // Create example accounts
-    bank->createSavings("S123", "Alice", 1000.0, 0.02);
-    bank->createChecking("C456", "Bob", 500.0, 200.0, 0.5);
+    this->setStyleSheet("QMainWindow { background-color: #1e1e1e; }"
+                        "QPushButton { background-color: gold; color: black; border-radius: 5px; padding: 5px; }"
+                        "QLabel { color: gold; }"
+                        "QLineEdit { background-color: #333333; color: gold; border: 1px solid gold; }");
 
-    currentAccountId = "S123";
-    currentAccount = bank->findById(currentAccountId);
+    bank->createSavings("SAV001", "Alice", 1000.0, 0.02);
+    bank->createChecking("CHK001", "Bob", 500.0, 200.0, 1.0);
 
-    // connect UI elements to slots
+    defaultAccount = bank->findById("SAV001");
+
+    if(defaultAccount)
+        ui->balanceLabel->setText("Balance: " + QString::number(defaultAccount->getBalance()));
+
     connect(ui->depositButton, &QPushButton::clicked, this, &MainWindow::deposit);
     connect(ui->withdrawButton, &QPushButton::clicked, this, &MainWindow::withdraw);
     connect(ui->interestButton, &QPushButton::clicked, this, &MainWindow::addInterest);
-
-    bank->startAutoSave("accounts.csv", 5000);
-
-    refreshDisplay();
 }
 
 MainWindow::~MainWindow()
 {
-    bank->stopAutoSave();
     delete ui;
 }
 
 void MainWindow::deposit()
 {
-    bool ok = false;
-    double amount = ui->amountEdit->text().toDouble(&ok);
-    if (!ok) { QMessageBox::warning(this, "Error", "Invalid amount"); return; }
-    try {
-        if (!currentAccount) throw std::runtime_error("No current account");
-        currentAccount->deposit(amount);
-        refreshDisplay();
-    } catch (std::exception& ex) {
-        QMessageBox::warning(this, "Error", ex.what());
-    }
+    if(!defaultAccount) return;
+
+    double amount = ui->amountLineEdit->text().toDouble();
+    defaultAccount->deposit(amount);
+    ui->balanceLabel->setText("Balance: " + QString::number(defaultAccount->getBalance()));
 }
 
 void MainWindow::withdraw()
 {
-    bool ok = false;
-    double amount = ui->amountEdit->text().toDouble(&ok);
-    if (!ok) { QMessageBox::warning(this, "Error", "Invalid amount"); return; }
-    try {
-        if (!currentAccount) throw std::runtime_error("No current account");
-        currentAccount->withdraw(amount);
-        refreshDisplay();
-    } catch (std::exception& ex) {
-        QMessageBox::warning(this, "Error", ex.what());
+    if(!defaultAccount) return;
+
+    double amount = ui->amountLineEdit->text().toDouble();
+
+    if(CheckingAccount* chk = dynamic_cast<CheckingAccount*>(defaultAccount)) {
+        if(amount > chk->getBalance() + chk->getOverdraft()) {
+            QMessageBox::warning(this, "Withdraw Failed", "Insufficient funds!");
+            return;
+        }
+    } else if(SavingsAccount* sav = dynamic_cast<SavingsAccount*>(defaultAccount)) {
+        if(amount > sav->getBalance()) {
+            QMessageBox::warning(this, "Withdraw Failed", "Insufficient funds!");
+            return;
+        }
     }
+
+    defaultAccount->withdraw(amount);
+    ui->balanceLabel->setText("Balance: " + QString::number(defaultAccount->getBalance()));
 }
 
 void MainWindow::addInterest()
 {
-    try {
-        if (currentAccount && currentAccount->getAccountType() == 1) {
-            SavingsAccount* sa = dynamic_cast<SavingsAccount*>(currentAccount);
-            if (sa) sa->addInterest();
-            refreshDisplay();
-        } else {
-            QMessageBox::information(this, "Info", "Current account is not a savings account");
-        }
-    } catch (std::exception& ex) {
-        QMessageBox::warning(this, "Error", ex.what());
-    }
-}
+    if(!defaultAccount) return;
 
-void MainWindow::refreshDisplay()
-{
-    if (!currentAccount) {
-        ui->balanceLabel->setText("No account");
-        return;
+    if(SavingsAccount* sav = dynamic_cast<SavingsAccount*>(defaultAccount)) {
+        sav->addInterest();
+        ui->balanceLabel->setText("Balance: " + QString::number(defaultAccount->getBalance()));
+    } else {
+        QMessageBox::information(this, "Interest", "Interest only applies to savings accounts.");
     }
-    QString text = QString::fromStdString(currentAccount->getAccountNumber())
-                   + " / " + QString::fromStdString(currentAccount->getOwner())
-                   + " : " + QString::number(currentAccount->getBalance());
-    ui->balanceLabel->setText(text);
 }

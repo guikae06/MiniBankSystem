@@ -1,2 +1,2 @@
 #include "CheckingAccount.h"
-// nothing additional here for now
+// nothing here

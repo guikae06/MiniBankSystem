@@ -1,7 +1,11 @@
 #include "Bank.h"
+#include <fstream>
+#include <algorithm>
 #include <chrono>
 
 namespace MiniBank {
+
+Bank::Bank() = default;
 
 Bank::~Bank() {
     stopAutoSave();
