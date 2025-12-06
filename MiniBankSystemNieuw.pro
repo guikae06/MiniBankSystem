@@ -1,19 +1,19 @@
-QT += core gui widgets
+QT       += core gui widgets
 
 CONFIG += c++17
 
 TARGET = MiniBankSystem
 TEMPLATE = app
 
-INCLUDEPATH += headers libs
+INCLUDEPATH += headers
 
 SOURCES += \
-    src/FileDB.cpp \
-    src/AuthManager.cpp \
-    src/Bank.cpp \
     src/Account.cpp \
     src/CheckingAccount.cpp \
     src/SavingsAccount.cpp \
+    src/Bank.cpp \
+    src/FileStorage.cpp \
+    src/Authmanager.cpp \
     src/StockMarket.cpp \
     gui/main.cpp \
     gui/mainwindow.cpp \
@@ -21,19 +21,22 @@ SOURCES += \
     gui/TransferDialog.cpp
 
 HEADERS += \
-    headers/FileDB.h \
-    headers/AuthManager.h \
-    headers/Bank.h \
     headers/Account.h \
     headers/CheckingAccount.h \
     headers/SavingsAccount.h \
+    headers/Bank.h \
+    headers/FileStorage.h \
+    headers/Authmanager.h \
     headers/StockMarket.h \
     gui/mainwindow.h \
     gui/LogInDialog.h \
     gui/TransferDialog.h
 
 FORMS += \
-    gui/mainwindow.ui \
     gui/LogInDialog.ui \
-    gui/TransferDialog.ui
+    gui/TransferDialog.ui \
+    gui/mainwindow.ui
 
+# Default rules for deployment.
+unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
