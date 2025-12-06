@@ -1,20 +1,26 @@
 #ifndef AUTHMANAGER_H
 #define AUTHMANAGER_H
 
-#include <QString>
-#include "FileStorage.h"
+#include <string>
+#include <unordered_map>
 
-class AuthManager {
+namespace MiniBank {
+
+class Authmanager {
 public:
-    explicit AuthManager(FileStorage *storage);
-    bool signup(const QString &username, const QString &password, QString &err);
-    bool login(const QString &username, const QString &password, int &userId, QString &err);
+    Authmanager() = default;
+    // store users in a simple file (username:password). Methods return true on success.
+    bool signup(const std::string& username, const std::string& password, std::string& err);
+    bool login(const std::string& username, const std::string& password, int& userId, std::string& err);
 
 private:
-    FileStorage *m_storage;
-    QString generateSalt() const;
-    QString hashPassword(const QString &password, const QString &salt) const;
-    int nextUserId(const QJsonArray &users) const;
+    std::unordered_map<std::string, std::string> users;
+    void loadFromFile();
+    void saveToFile();
+    std::string userFile{"users.txt"};
+    int nextUserId{1};
 };
+
+} // namespace MiniBank
 
 #endif // AUTHMANAGER_H

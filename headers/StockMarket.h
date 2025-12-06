@@ -1,30 +1,24 @@
 #ifndef STOCKMARKET_H
 #define STOCKMARKET_H
 
-#include <QObject>
-#include <QTimer>
-#include <QMap>
-#include <QList>
+#include <string>
+#include <vector>
+#include <functional>
 
-struct StockInfo { QString symbol; QString name; double price; };
+namespace MiniBank {
 
-class StockMarket : public QObject {
-    Q_OBJECT
+class StockMarket {
 public:
-    explicit StockMarket(QObject *parent=nullptr);
-    void start(int intervalMs=2000);
-    QList<StockInfo> stocks() const;
+    struct Stock { std::string symbol; double price; };
 
-signals:
-    void priceUpdated(const QString &symbol, double price);
-
-public slots:
-    void tick();
+    StockMarket() = default;
+    void simulateTick();
+    std::vector<Stock> getStocks() const { return stocks; }
 
 private:
-    QTimer m_timer;
-    QMap<QString, StockInfo> m_stocks;
-    double randomJitter();
+    std::vector<Stock> stocks{{"FOO",100.0},{"BAR",50.0},{"ACME",10.0}};
 };
 
-#endif
+} // namespace MiniBank
+
+#endif // STOCKMARKET_H
