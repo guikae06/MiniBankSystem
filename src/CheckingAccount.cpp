@@ -1,2 +1,2 @@
 #include "../headers/CheckingAccount.h"
-// nothing here
+// no additional implementation needed

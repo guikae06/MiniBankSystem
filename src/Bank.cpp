@@ -1,49 +1,61 @@
-#include "Bank.h"
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QVariant>
+#include "../headers/Bank.h"
+#include "../headers/CheckingAccount.h"
+#include "../headers/SavingsAccount.h"
+#include <algorithm>
+#include <chrono>
+#include <thread>
 
-using namespace MiniBank;
+namespace MiniBank {
 
-bool Bank::transfer(const std::string &fromAcc, const std::string &toAcc, double amount, std::string &err, const QSqlDatabase &db) {
+void Bank::createSavings(const std::string& id, const std::string& owner, double bal, double rate) {
     std::lock_guard<std::mutex> lock(mtx);
-    Account* aFrom = findById(fromAcc);
-    Account* aTo = findById(toAcc);
-    if(!aFrom || !aTo) { err = "Account not found"; return false; }
-    // attempt withdraw
-    if (CheckingAccount* chk = dynamic_cast<CheckingAccount*>(aFrom)) {
-        if(!chk->withdraw(amount)) { err = "Insufficient funds"; return false; }
-    } else {
-        // SavingsAccount: ensure balance >= amount
-        if (aFrom->getBalance() < amount) { err = "Insufficient funds"; return false; }
-        // perform withdraw using deposit negative or implement withdraw in Savings
-        // Here we directly reduce balance (since Account has protected balance, we do via a method ideally)
-        aFrom->deposit(-amount); // using deposit(-amount) is a quick trick if withdraw isn't implemented
-    }
-    aTo->deposit(amount);
+    accounts.push_back(std::make_unique<SavingsAccount>(id, owner, bal, rate));
+}
 
-    // optionally persist transaction if db provided and open
-    if (db.isValid() && db.isOpen()) {
-        QSqlQuery q(db);
-        if (!db.transaction()) {
-            // continue but warn
-        }
-        q.prepare("INSERT INTO transactions(account_from, account_to, amount, type, note) VALUES(:f,:t,:a,:type,:note)");
-        q.bindValue(":f", QString::fromStdString(fromAcc));
-        q.bindValue(":t", QString::fromStdString(toAcc));
-        q.bindValue(":a", amount);
-        q.bindValue(":type", "transfer");
-        q.bindValue(":note", "");
-        if(!q.exec()) {
-            // rollback and revert in memory changes
-            db.rollback();
-            // revert in-memory
-            aFrom->deposit(amount);
-            aTo->deposit(-amount);
-            err = q.lastError().text().toStdString();
-            return false;
-        }
-        db.commit();
+void Bank::createChecking(const std::string& id, const std::string& owner, double bal, double overdraft, double fee) {
+    std::lock_guard<std::mutex> lock(mtx);
+    accounts.push_back(std::make_unique<CheckingAccount>(id, owner, bal, overdraft, fee));
+}
+
+Account* Bank::findById(const std::string& id) {
+    std::lock_guard<std::mutex> lock(mtx);
+    auto it = std::find_if(accounts.begin(), accounts.end(), [&](const std::unique_ptr<Account>& a) {
+        return a && a->getAccountNumber() == id;
+    });
+    return it != accounts.end() ? it->get() : nullptr;
+}
+
+bool Bank::transfer(const std::string& fromId, const std::string& toId, double amount) {
+    if (amount <= 0) return false;
+    std::lock_guard<std::mutex> lock(mtx);
+    Account* a = nullptr;
+    Account* b = nullptr;
+    for (auto& u : accounts) {
+        if (!u) continue;
+        if (u->getAccountNumber() == fromId) a = u.get();
+        if (u->getAccountNumber() == toId) b = u.get();
     }
+    if (!a || !b) return false;
+    if (!a->withdraw(amount)) return false;
+    b->deposit(amount);
     return true;
 }
+
+void Bank::startAutoSave(std::function<void()> saver, unsigned intervalMs) {
+    if (autosaveRunning.load()) return;
+    autosaveRunning = true;
+    autosaveThread = std::thread([this, saver, intervalMs]() {
+        while (autosaveRunning.load()) {
+            try { saver(); } catch (...) {}
+            std::this_thread::sleep_for(std::chrono::milliseconds(intervalMs));
+        }
+    });
+}
+
+void Bank::stopAutoSave() {
+    if (!autosaveRunning.load()) return;
+    autosaveRunning = false;
+    if (autosaveThread.joinable()) autosaveThread.join();
+}
+
+} // namespace MiniBank
