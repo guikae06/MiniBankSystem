@@ -4,16 +4,12 @@
 #include <QDialog>
 
 namespace Ui { class LogInDialog; }
+namespace MiniBank { class Authmanager; class FileStorage; }
 
-class FileStorage;
-class AuthManager;
-
-class LogInDialog : public QDialog
-{
+class LogInDialog : public QDialog {
     Q_OBJECT
-
 public:
-    explicit LogInDialog(FileStorage *storage, QWidget *parent = nullptr);
+    explicit LogInDialog(MiniBank::FileStorage* storage, QWidget* parent = nullptr);
     ~LogInDialog();
     int authenticatedUserId() const { return m_userId; }
 
@@ -22,9 +18,9 @@ private slots:
     void on_btnSignup_clicked();
 
 private:
-    Ui::LogInDialog *ui;
-    FileStorage *m_storage;
-    AuthManager *m_auth;
+    Ui::LogInDialog* ui;
+    MiniBank::FileStorage* m_storage;
+    MiniBank::Authmanager* m_auth;
     int m_userId{-1};
 };
 

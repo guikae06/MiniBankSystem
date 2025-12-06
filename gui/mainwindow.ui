@@ -2,103 +2,31 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>300</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>MiniBankSystem</string>
-  </property>
+  <property name="geometry"><rect><x>0</x><y>0</y><width>800</width><height>480</height></rect></property>
+  <property name="windowTitle"><string>MiniBank</string></property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="balanceLabel">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>340</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Balance: 0.0</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="amountLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>80</y>
-      <width>200</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="placeholderText">
-     <string>Enter amount</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="depositButton">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>130</y>
-      <width>100</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Deposit</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="withdrawButton">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>130</y>
-      <width>100</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Withdraw</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="interestButton">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>180</y>
-      <width>100</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add Interest</string>
-    </property>
-   </widget>
+    <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+        <widget class="QListWidget" name="accountListWidget"/>
+      </item>
+      <item>
+        <layout class="QHBoxLayout" name="hLayout">
+          <item><widget class="QLineEdit" name="amountEdit"/></item>
+          <item><widget class="QPushButton" name="depositButton"><property name="text"><string>Deposit</string></property></widget></item>
+          <item><widget class="QPushButton" name="withdrawButton"><property name="text"><string>Withdraw</string></property></widget></item>
+          <item><widget class="QPushButton" name="transferButton"><property name="text"><string>Transfer</string></property></widget></item>
+          <item><widget class="QPushButton" name="interestButton"><property name="text"><string>Add Interest</string></property></widget></item>
+          <item><widget class="QPushButton" name="refreshButton"><property name="text"><string>Refresh</string></property></widget></item>
+        </layout>
+      </item>
+      <item>
+        <widget class="QLabel" name="balanceLabel">
+          <property name="text"><string>Select account</string></property>
+        </widget>
+      </item>
+    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>400</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
+  <widget class="QMenuBar" name="menubar"/>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>

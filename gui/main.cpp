@@ -1,26 +1,32 @@
 #include <QApplication>
-#include "mainwindow.h"
 #include "LogInDialog.h"
-#include "headers/FileStorage.h"
-#include <QMessageBox>
+#include "mainwindow.h"
+#include "../headers/Bank.h"
+#include "../headers/FileStorage.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
     QApplication a(argc, argv);
 
-    QString err;
-    FileStorage storage("data.json");
-    if (!storage.ensureLoaded(err)) {
-        QMessageBox::warning(nullptr, "Data load error", err);
-        // attempt save initial
-        storage.load(err);
+    MiniBank::Bank bank;
+    MiniBank::FileStorage storage("accounts.txt");
+    // load accounts (file may not exist on first run)
+    try { storage.load(bank); } catch(...) {}
+
+    // seed demo if empty
+    if (bank.getAccounts().empty()) {
+        bank.createSavings("SAV001", "Alice", 1000.0, 0.02);
+        bank.createChecking("CHK001", "Bob", 500.0, 200.0, 1.0);
+        storage.save(bank);
     }
 
     LogInDialog dlg(&storage);
     if (dlg.exec() != QDialog::Accepted) return 0;
-    int userId = dlg.authenticatedUserId();
 
-    MainWindow w(userId, &storage); // we'll assume your MainWindow header can accept this
+    MainWindow w(&bank, &storage);
     w.show();
-    return a.exec();
+
+    int ret = a.exec();
+
+    try { storage.save(bank); } catch(...) {}
+    return ret;
 }

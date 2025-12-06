@@ -2,30 +2,30 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <memory>
 
-#include "../headers/StockMarket.h"
-
-QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+namespace MiniBank { class Bank; class FileStorage; }
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    MainWindow(int userId, QWidget *parent = nullptr);
+    explicit MainWindow(MiniBank::Bank* bankPtr, MiniBank::FileStorage* storagePtr, QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:
-    void onPriceUpdated(const QString &symbol, double price);
-    void on_actionTransfer_triggered();
-    void on_btnBuyStock_clicked();
-    void on_btnSellStock_clicked();
+    void deposit();
+    void withdraw();
+    void transfer();
+    void addInterest();
+    void refresh();
 
 private:
-    Ui::MainWindow *ui;
-    int m_userId;
-    StockMarket *m_stockMarket;
+    Ui::MainWindow* ui;
+    MiniBank::Bank* bank;
+    MiniBank::FileStorage* storage;
 
+    void refreshAccountView();
 };
 
-#endif
+#endif // MAINWINDOW_H
