@@ -1,57 +1,21 @@
-#include "../headers/Authmanager.h"
-#include <fstream>
-#include <sstream>
+#include "AuthManager.h"
+#include <functional>
 
-namespace MiniBank {
+AuthManager::AuthManager() {}
 
-bool Authmanager::signup(const std::string& username, const std::string& password, std::string& err) {
-    if (username.empty() || password.empty()) {
-        err = "empty";
-        return false;
-    }
-    loadFromFile();
-    if (users.find(username) != users.end()) {
-        err = "exists";
-        return false;
-    }
-    users[username] = password;
-    saveToFile();
+std::string AuthManager::hashPassword(const std::string& password) const {
+    std::hash<std::string> hasher;
+    return std::to_string(hasher(password));
+}
+
+bool AuthManager::signup(const std::string& username, const std::string& password) {
+    if (users.find(username) != users.end()) return false;
+    users[username] = hashPassword(password);
     return true;
 }
 
-bool Authmanager::login(const std::string& username, const std::string& password, int& userId, std::string& err) {
-    loadFromFile();
+bool AuthManager::login(const std::string& username, const std::string& password) {
     auto it = users.find(username);
-    if (it == users.end() || it->second != password) {
-        err = "invalid";
-        return false;
-    }
-    // simple userId mapping: hash of username for demo
-    userId = static_cast<int>(std::hash<std::string>{}(username) & 0x7fffffff);
-    return true;
+    if (it == users.end()) return false;
+    return it->second == hashPassword(password);
 }
-
-void Authmanager::loadFromFile() {
-    if (users.size()) return; // already loaded
-    std::ifstream ifs(userFile);
-    if (!ifs) return;
-    std::string line;
-    while (std::getline(ifs, line)) {
-        if (line.empty()) continue;
-        auto p = line.find(':');
-        if (p == std::string::npos) continue;
-        std::string user = line.substr(0, p);
-        std::string pass = line.substr(p+1);
-        users[user] = pass;
-    }
-}
-
-void Authmanager::saveToFile() {
-    std::ofstream ofs(userFile, std::ios::trunc);
-    if (!ofs) return;
-    for (const auto& kv : users) {
-        ofs << kv.first << ':' << kv.second << '\n';
-    }
-}
-
-} // namespace MiniBank

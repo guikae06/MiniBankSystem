@@ -1,54 +1,60 @@
-#include "../headers/FileStorage.h"
-#include "../headers/CheckingAccount.h"
-#include "../headers/SavingsAccount.h"
-#include <fstream>
-#include <sstream>
+#include "FileStorage.h"
 #include <iostream>
 
 namespace MiniBank {
 
-void FileStorage::save(const Bank& bank) {
-    std::ofstream ofs(path, std::ios::trunc);
-    if (!ofs) throw std::runtime_error("Cannot open file for save: " + path);
+FileStorage::FileStorage(const std::string& file) : filename(file) {}
 
-    bank.forEachAccount([&ofs](const Account& a) {
-        ofs << static_cast<int>(a.getAccountType()) << ','
-            << a.getAccountNumber() << ',' << a.getOwner() << ','
-            << a.getBalance();
-        if (a.getAccountType() == AccountType::Checking) {
-            const CheckingAccount& c = static_cast<const CheckingAccount&>(a);
-            ofs << ',' << c.getOverdraft() << ',' << c.getFee();
-        } else if (a.getAccountType() == AccountType::Savings) {
-            const SavingsAccount& s = static_cast<const SavingsAccount&>(a);
-            ofs << ',' << s.getInterestRate();
-        }
-        ofs << '\n';
-    });
+void FileStorage::save(const Bank& bank) {
+    std::ofstream ofs(filename, std::ios::binary);
+    if (!ofs) throw std::runtime_error("Cannot open file for saving");
+
+    auto accounts = bank.getAccounts();
+    size_t size = accounts.size();
+    ofs.write(reinterpret_cast<const char*>(&size), sizeof(size));
+
+    for (auto acc : accounts) {
+        unsigned int id = acc->getId();
+        ofs.write(reinterpret_cast<const char*>(&id), sizeof(id));
+
+        double balance = acc->getBalance();
+        ofs.write(reinterpret_cast<const char*>(&balance), sizeof(balance));
+
+        size_t len = acc->getOwnerName().size();
+        ofs.write(reinterpret_cast<const char*>(&len), sizeof(len));
+        ofs.write(acc->getOwnerName().c_str(), len);
+
+        bool isSavings = dynamic_cast<SavingsAccount*>(acc) != nullptr;
+        ofs.write(reinterpret_cast<const char*>(&isSavings), sizeof(isSavings));
+    }
 }
 
 void FileStorage::load(Bank& bank) {
-    std::ifstream ifs(path);
-    if (!ifs) return;
-    std::string line;
-    while (std::getline(ifs, line)) {
-        if (line.empty()) continue;
-        std::istringstream ss(line);
-        std::string piece;
-        std::vector<std::string> parts;
-        while (std::getline(ss, piece, ',')) parts.push_back(piece);
-        if (parts.size() < 4) continue;
-        int type = std::stoi(parts[0]);
-        std::string id = parts[1];
-        std::string owner = parts[2];
-        double bal = std::stod(parts[3]);
-        if (type == static_cast<int>(AccountType::Checking) && parts.size() >= 6) {
-            double overd = std::stod(parts[4]);
-            double fee = std::stod(parts[5]);
-            bank.createChecking(id, owner, bal, overd, fee);
-        } else if (type == static_cast<int>(AccountType::Savings) && parts.size() >= 5) {
-            double rate = std::stod(parts[4]);
-            bank.createSavings(id, owner, bal, rate);
-        }
+    std::ifstream ifs(filename, std::ios::binary);
+    if (!ifs) throw std::runtime_error("Cannot open file for loading");
+
+    size_t size;
+    ifs.read(reinterpret_cast<char*>(&size), sizeof(size));
+
+    for (size_t i = 0; i < size; ++i) {
+        unsigned int id;
+        double balance;
+        size_t len;
+
+        ifs.read(reinterpret_cast<char*>(&id), sizeof(id));
+        ifs.read(reinterpret_cast<char*>(&balance), sizeof(balance));
+        ifs.read(reinterpret_cast<char*>(&len), sizeof(len));
+
+        std::string owner(len, '\0');
+        ifs.read(&owner[0], len);
+
+        bool isSavings;
+        ifs.read(reinterpret_cast<char*>(&isSavings), sizeof(isSavings));
+
+        if (isSavings)
+            bank.createSavingsAccount(owner, balance);
+        else
+            bank.createCheckingAccount(owner, balance);
     }
 }
 

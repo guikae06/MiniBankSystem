@@ -1,61 +1,94 @@
-#include "../headers/Bank.h"
-#include "../headers/CheckingAccount.h"
-#include "../headers/SavingsAccount.h"
+#include "Bank.h"
 #include <algorithm>
-#include <chrono>
-#include <thread>
 
 namespace MiniBank {
 
-void Bank::createSavings(const std::string& id, const std::string& owner, double bal, double rate) {
+Bank::Bank() : nextId(1) {}
+
+Bank::~Bank() {
     std::lock_guard<std::mutex> lock(mtx);
-    accounts.push_back(std::make_unique<SavingsAccount>(id, owner, bal, rate));
+    for(auto acc : accounts) delete acc;
+    accounts.clear();
 }
 
-void Bank::createChecking(const std::string& id, const std::string& owner, double bal, double overdraft, double fee) {
+// Create accounts
+Account* Bank::createCheckingAccount(const std::string& ownerName, double balance, double overdraft) {
     std::lock_guard<std::mutex> lock(mtx);
-    accounts.push_back(std::make_unique<CheckingAccount>(id, owner, bal, overdraft, fee));
+    Account* acc = new CheckingAccount(nextId++, ownerName, balance, overdraft);
+    accounts.push_back(acc);
+    return acc;
 }
 
-Account* Bank::findById(const std::string& id) {
+Account* Bank::createSavingsAccount(const std::string& ownerName, double balance, double interestRate) {
     std::lock_guard<std::mutex> lock(mtx);
-    auto it = std::find_if(accounts.begin(), accounts.end(), [&](const std::unique_ptr<Account>& a) {
-        return a && a->getAccountNumber() == id;
-    });
-    return it != accounts.end() ? it->get() : nullptr;
+    Account* acc = new SavingsAccount(nextId++, ownerName, balance, interestRate);
+    accounts.push_back(acc);
+    return acc;
 }
 
-bool Bank::transfer(const std::string& fromId, const std::string& toId, double amount) {
-    if (amount <= 0) return false;
+// Find account by ID
+Account* Bank::findAccount(unsigned int id) const {
     std::lock_guard<std::mutex> lock(mtx);
-    Account* a = nullptr;
-    Account* b = nullptr;
-    for (auto& u : accounts) {
-        if (!u) continue;
-        if (u->getAccountNumber() == fromId) a = u.get();
-        if (u->getAccountNumber() == toId) b = u.get();
+    for(auto acc : accounts) {
+        if(acc->getId() == id) return acc;
     }
-    if (!a || !b) return false;
-    if (!a->withdraw(amount)) return false;
-    b->deposit(amount);
-    return true;
+    return nullptr;
 }
 
-void Bank::startAutoSave(std::function<void()> saver, unsigned intervalMs) {
-    if (autosaveRunning.load()) return;
-    autosaveRunning = true;
-    autosaveThread = std::thread([this, saver, intervalMs]() {
-        while (autosaveRunning.load()) {
-            try { saver(); } catch (...) {}
-            std::this_thread::sleep_for(std::chrono::milliseconds(intervalMs));
-        }
-    });
+// Find account by account number
+Account* Bank::findByNumber(const std::string& accountNumber) const {
+    std::lock_guard<std::mutex> lock(mtx);
+    for(auto acc : accounts) {
+        if(acc->getAccountNumber() == accountNumber)
+            return acc;
+    }
+    return nullptr;
 }
 
-void Bank::stopAutoSave() {
-    if (!autosaveRunning.load()) return;
-    autosaveRunning = false;
-    if (autosaveThread.joinable()) autosaveThread.join();
+// Return copy of account pointers (snapshot)
+std::vector<Account*> Bank::snapshot() const {
+    std::lock_guard<std::mutex> lock(mtx);
+    return accounts;
+}
+
+// Transfer money between accounts
+bool Bank::transfer(Account* from, Account* to, double amount) {
+    if(!from || !to) return false;
+    if(from->withdraw(amount)) {
+        to->deposit(amount);
+        return true;
+    }
+    return false;
+}
+
+// Pay interest on savings accounts
+void Bank::payInterest(unsigned int days) {
+    std::lock_guard<std::mutex> lock(mtx);
+    for(auto acc : accounts) {
+        if(auto s = dynamic_cast<SavingsAccount*>(acc))
+            s->accrueInterest(days);
+    }
+}
+
+// Return accounts vector
+std::vector<Account*> Bank::getAccounts() const {
+    std::lock_guard<std::mutex> lock(mtx);
+    return accounts;
+}
+
+// Get StockMarket
+StockMarket& Bank::getStockMarket() {
+    return stockMarket;
+}
+
+// Remove account by ID
+void Bank::removeAccount(unsigned int id) {
+    std::lock_guard<std::mutex> lock(mtx);
+    auto it = std::remove_if(accounts.begin(), accounts.end(),
+                             [id](Account* acc){ return acc->getId() == id; });
+    for(auto itr = it; itr != accounts.end(); ++itr)
+        delete *itr;
+    accounts.erase(it, accounts.end());
 }
 
 } // namespace MiniBank
