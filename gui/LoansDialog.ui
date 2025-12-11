@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoansDialog</class>
+ <widget class="QDialog" name="LoansDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>260</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Loans</string>
+  </property>
+  <widget class="QWidget" name="widget">
+   <widget class="QSpinBox" name="accountIdSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>200</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="amountDoubleSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>70</y>
+      <width>200</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <double>1000000.0</double>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="requestLoanButton">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>140</y>
+      <width>120</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Request Loan</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="payLoanButton">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>140</y>
+      <width>120</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Pay Loan</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
