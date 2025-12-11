@@ -2,7 +2,7 @@
 #include "ui_LoansDialog.h"
 #include <QMessageBox>
 
-LoansDialog::LoansDialog(Bank* b, QWidget *parent) :
+LoansDialog::LoansDialog(MiniBank::Bank* b, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LoansDialog),
     bank(b)
@@ -25,7 +25,7 @@ void LoansDialog::on_requestLoanButton_clicked()
     unsigned int accId = ui->accountIdSpinBox->value();
     double amount = ui->amountDoubleSpinBox->value();
 
-    Account* acc = bank->findAccount(accId);
+    MiniBank::Account* acc = bank->findAccount(accId);
     if(!acc) {
         showMessage("Invalid account ID.");
         return;
@@ -40,7 +40,7 @@ void LoansDialog::on_payLoanButton_clicked()
     unsigned int accId = ui->accountIdSpinBox->value();
     double amount = ui->amountDoubleSpinBox->value();
 
-    Account* acc = bank->findAccount(accId);
+    MiniBank::Account* acc = bank->findAccount(accId);
     if(!acc) {
         showMessage("Invalid account ID.");
         return;

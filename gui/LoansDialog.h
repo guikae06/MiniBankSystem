@@ -2,7 +2,7 @@
 #define LOANSDIALOG_H
 
 #include <QDialog>
-#include "Bank.h"
+#include "../headers/Bank.h"
 
 namespace Ui {
 class LoansDialog;
@@ -13,7 +13,7 @@ class LoansDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoansDialog(Bank* bank, QWidget *parent = nullptr);
+    explicit LoansDialog(MiniBank::Bank* bank, QWidget *parent = nullptr);
     ~LoansDialog();
 
 private slots:
@@ -22,7 +22,7 @@ private slots:
 
 private:
     Ui::LoansDialog *ui;
-    Bank* bank;
+    MiniBank::Bank* bank;
     void showMessage(const QString& msg);
 };
 
