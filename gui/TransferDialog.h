@@ -2,16 +2,27 @@
 #define TRANSFERDIALOG_H
 
 #include <QDialog>
+#include "../headers/Bank.h"
 
-namespace Ui { class TransferDialog; }
+namespace Ui {
+class TransferDialog;
+}
 
-class TransferDialog : public QDialog {
+class TransferDialog : public QDialog
+{
     Q_OBJECT
+
 public:
-    explicit TransferDialog(QWidget* parent = nullptr);
+    explicit TransferDialog(MiniBank::Bank* bank, QWidget *parent = nullptr);
     ~TransferDialog();
+
+private slots:
+    void on_transferButton_clicked();
+
 private:
-    Ui::TransferDialog* ui;
+    Ui::TransferDialog *ui;
+    MiniBank::Bank* bank;
+    void showMessage(const QString& msg);
 };
 
 #endif // TRANSFERDIALOG_H

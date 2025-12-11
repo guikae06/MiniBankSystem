@@ -3,14 +3,70 @@
  <class>TransferDialog</class>
  <widget class="QDialog" name="TransferDialog">
   <property name="geometry">
-   <rect><x>0</x><y>0</y><width>360</width><height>180</height></rect>
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>250</height>
+   </rect>
   </property>
-  <layout class="QFormLayout">
-    <item row="0" column="0"><widget class="QLineEdit" name="fromEdit"/></item>
-    <item row="1" column="0"><widget class="QLineEdit" name="toEdit"/></item>
-    <item row="2" column="0"><widget class="QLineEdit" name="amountEdit"/></item>
-    <item row="3" column="0"><widget class="QPushButton" name="btnTransfer"><property name="text"><string>Transfer</string></property></widget></item>
-  </layout>
+  <property name="windowTitle">
+   <string>Transfer Funds</string>
+  </property>
+  <widget class="QWidget" name="widget">
+   <widget class="QSpinBox" name="fromIdSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>30</y>
+      <width>200</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="toIdSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>70</y>
+      <width>200</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="amountDoubleSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>110</y>
+      <width>200</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <double>1000000.000000000000</double>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="transferButton">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>160</y>
+      <width>100</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Transfer</string>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <resources/>
  <connections/>

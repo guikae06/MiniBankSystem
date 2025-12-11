@@ -2,30 +2,42 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <memory>
+#include <QString>
+#include <QMessageBox>
+#include <QListWidget>
 
+// Include full definitions
+#include "../headers/Bank.h"
+#include "../headers/FileStorage.h"
+#include "../headers/StockMarket.h"
+
+QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
-namespace MiniBank { class Bank; class FileStorage; }
+QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
+
 public:
-    explicit MainWindow(MiniBank::Bank* bankPtr, MiniBank::FileStorage* storagePtr, QWidget* parent = nullptr);
+    explicit MainWindow(MiniBank::Bank* bank,
+                        MiniBank::FileStorage* storage,
+                        MiniBank::StockMarket* market,
+                        QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:
-    void deposit();
-    void withdraw();
-    void transfer();
-    void addInterest();
-    void refresh();
+    void on_depositBtn_clicked();
+    void on_withdrawBtn_clicked();
 
 private:
-    Ui::MainWindow* ui;
-    MiniBank::Bank* bank;
-    MiniBank::FileStorage* storage;
+    void refreshAccountList();
 
-    void refreshAccountView();
+    Ui::MainWindow* ui;
+
+    MiniBank::Bank* bank_;
+    MiniBank::FileStorage* storage_;
+    MiniBank::StockMarket* market_;
 };
 
 #endif // MAINWINDOW_H
