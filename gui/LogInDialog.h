@@ -2,26 +2,31 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
+#include "../headers/AuthManager.h"
 
-namespace Ui { class LogInDialog; }
-namespace MiniBank { class Authmanager; class FileStorage; }
+namespace Ui {
+class LogInDialog;
+}
 
-class LogInDialog : public QDialog {
+class LogInDialog : public QDialog
+{
     Q_OBJECT
+
 public:
-    explicit LogInDialog(MiniBank::FileStorage* storage, QWidget* parent = nullptr);
+    explicit LogInDialog(AuthManager* authManager, QWidget *parent = nullptr);
     ~LogInDialog();
-    int authenticatedUserId() const { return m_userId; }
+
+signals:
+    void loginSuccess();
 
 private slots:
-    void on_btnLogin_clicked();
-    void on_btnSignup_clicked();
+    void on_loginButton_clicked();
+    void on_signupButton_clicked();
 
 private:
-    Ui::LogInDialog* ui;
-    MiniBank::FileStorage* m_storage;
-    MiniBank::Authmanager* m_auth;
-    int m_userId{-1};
+    Ui::LogInDialog *ui;
+    AuthManager* authManager;
+    void showMessage(const QString& msg);
 };
 
 #endif // LOGINDIALOG_H

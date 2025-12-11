@@ -1,53 +1,45 @@
 #include "LogInDialog.h"
 #include "ui_LogInDialog.h"
-#include "../headers/Authmanager.h"
-#include "../headers/FileStorage.h"
 #include <QMessageBox>
 
-using namespace MiniBank;
-
-LogInDialog::LogInDialog(FileStorage* storage, QWidget* parent)
-    : QDialog(parent), ui(new Ui::LogInDialog), m_storage(storage), m_auth(new Authmanager()), m_userId(-1)
+LogInDialog::LogInDialog(AuthManager* auth, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::LogInDialog),
+    authManager(auth)
 {
     ui->setupUi(this);
-    connect(ui->btnLogin, &QPushButton::clicked, this, &LogInDialog::on_btnLogin_clicked);
-    connect(ui->btnSignup, &QPushButton::clicked, this, &LogInDialog::on_btnSignup_clicked);
+    setWindowTitle("Bank Login");
 }
 
-LogInDialog::~LogInDialog() {
-    delete m_auth;
+LogInDialog::~LogInDialog()
+{
     delete ui;
 }
 
-void LogInDialog::on_btnLogin_clicked() {
-    QString user = ui->usernameEdit->text().trimmed();
-    QString pass = ui->passwordEdit->text();
-    if (user.isEmpty() || pass.isEmpty()) {
-        QMessageBox::warning(this, "Login", "Vul gebruikersnaam en wachtwoord in.");
-        return;
-    }
-    std::string err;
-    int uid = -1;
-    bool ok = m_auth->login(user.toStdString(), pass.toStdString(), uid, err);
-    if (ok) {
-        m_userId = uid;
+void LogInDialog::showMessage(const QString& msg) {
+    QMessageBox::information(this, "Info", msg);
+}
+
+void LogInDialog::on_loginButton_clicked()
+{
+    QString username = ui->usernameLineEdit->text();
+    QString password = ui->passwordLineEdit->text();
+    if(authManager->login(username.toStdString(), password.toStdString())) {
+        showMessage("Login successful!");
+        emit loginSuccess();
         accept();
     } else {
-        QMessageBox::warning(this, "Login failed", QString::fromStdString(err));
+        showMessage("Invalid username or password.");
     }
 }
 
-void LogInDialog::on_btnSignup_clicked() {
-    QString user = ui->usernameEdit->text().trimmed();
-    QString pass = ui->passwordEdit->text();
-    if (user.isEmpty() || pass.isEmpty()) {
-        QMessageBox::warning(this, "Signup", "Vul gebruikersnaam en wachtwoord in.");
-        return;
-    }
-    std::string err;
-    if (m_auth->signup(user.toStdString(), pass.toStdString(), err)) {
-        QMessageBox::information(this, "Signup", "Account aangemaakt. Log nu in.");
+void LogInDialog::on_signupButton_clicked()
+{
+    QString username = ui->usernameLineEdit->text();
+    QString password = ui->passwordLineEdit->text();
+    if(authManager->signup(username.toStdString(), password.toStdString())) {
+        showMessage("Signup successful! You can now login.");
     } else {
-        QMessageBox::warning(this, "Signup failed", QString::fromStdString(err));
+        showMessage("Username already exists.");
     }
 }
