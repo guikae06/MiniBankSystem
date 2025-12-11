@@ -2,25 +2,18 @@
 #define AUTHMANAGER_H
 
 #include <string>
-#include <unordered_map>
+#include <map>
 
-namespace MiniBank {
-
-class Authmanager {
-public:
-    Authmanager() = default;
-    // store users in a simple file (username:password). Methods return true on success.
-    bool signup(const std::string& username, const std::string& password, std::string& err);
-    bool login(const std::string& username, const std::string& password, int& userId, std::string& err);
-
+class AuthManager {
 private:
-    std::unordered_map<std::string, std::string> users;
-    void loadFromFile();
-    void saveToFile();
-    std::string userFile{"users.txt"};
-    int nextUserId{1};
-};
+    std::map<std::string, std::string> users; // username -> hashed password
 
-} // namespace MiniBank
+    std::string hashPassword(const std::string& password) const;
+
+public:
+    AuthManager();
+    bool signup(const std::string& username, const std::string& password);
+    bool login(const std::string& username, const std::string& password);
+};
 
 #endif // AUTHMANAGER_H

@@ -1,20 +1,23 @@
 #ifndef FILESTORAGE_H
 #define FILESTORAGE_H
 
-#include <string>
 #include "Bank.h"
+#include <string>
+#include <fstream>
+#include <exception>
 
 namespace MiniBank {
 
 class FileStorage {
+private:
+    std::string filename;
+
 public:
-    explicit FileStorage(const std::string& filepath) : path(filepath) {}
+    FileStorage(const std::string& file);
     void save(const Bank& bank);
     void load(Bank& bank);
-private:
-    std::string path;
 };
 
-} // namespace MiniBank
+}
 
 #endif // FILESTORAGE_H
