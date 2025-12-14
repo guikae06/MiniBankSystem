@@ -2,7 +2,7 @@
 #include "ui_MainMenuDialog.h"
 #include "DepositWithdrawDialog.h"
 #include "LoansDialog.h"
-#include "AssuranceDialog.h"
+#include "InssuranceDialog.h"
 #include "StockMarketDialog.h"
 #include "TransferDialog.h"
 
@@ -39,7 +39,7 @@ void MainMenuDialog::on_loansButton_clicked()
 
 void MainMenuDialog::on_assuranceButton_clicked()
 {
-    AssuranceDialog dlg(account);
+    InssuranceDialog dlg(account);
     dlg.exec();
 }
 
