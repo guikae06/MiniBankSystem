@@ -6,8 +6,8 @@ TARGET = MiniBankSystem
 INCLUDEPATH += headers
 
 HEADERS += \
-    gui/AssuranceDialog.h \
     gui/DepositWithdrawDialog.h \
+    gui/InssuranceDialog.h \
     gui/LoansDialog.h \
     gui/MainMenuDialog.h \
     gui/StockMarketDialog.h \
@@ -23,8 +23,8 @@ HEADERS += \
 
 
 SOURCES += \
-    gui/AssuranceDialog.cpp \
     gui/DepositWithdrawDialog.cpp \
+    gui/InssuranceDialog.cpp \
     gui/LoansDialog.cpp \
     gui/MainMenuDialog.cpp \
     gui/StockMarketDialog.cpp \
@@ -40,8 +40,8 @@ SOURCES += \
     gui/TransferDialog.cpp
 
 FORMS += \
-    gui/AssuranceDialog.ui \
     gui/DepositWithdrawDialog.ui \
+    gui/InssuranceDialog.ui \
     gui/LoansDialog.ui \
     gui/MainMenuDialog.ui \
     gui/StockMarketDialog.ui \
