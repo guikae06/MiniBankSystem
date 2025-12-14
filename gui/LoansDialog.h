@@ -2,7 +2,7 @@
 #define LOANSDIALOG_H
 
 #include <QDialog>
-#include "../headers/Bank.h"
+#include "../headers/Account.h"
 
 namespace Ui {
 class LoansDialog;
@@ -13,7 +13,6 @@ class LoansDialog : public QDialog
     Q_OBJECT
 
 public:
-    // ✅ Constructor takes logged-in Account directly
     explicit LoansDialog(MiniBank::Account* account, QWidget *parent = nullptr);
     ~LoansDialog();
 
@@ -23,6 +22,8 @@ private slots:
     void on_backButton_clicked();
 
 private:
+    void refreshLoans();
+
     Ui::LoansDialog *ui;
     MiniBank::Account* account; // Logged-in account
 };

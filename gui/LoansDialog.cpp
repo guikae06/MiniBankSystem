@@ -9,8 +9,9 @@ LoansDialog::LoansDialog(MiniBank::Account* acc, QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Back button closes dialog
     connect(ui->backButton, &QPushButton::clicked, this, &QDialog::accept);
+
+    refreshLoans();
 }
 
 LoansDialog::~LoansDialog()
@@ -18,35 +19,60 @@ LoansDialog::~LoansDialog()
     delete ui;
 }
 
+void LoansDialog::refreshLoans()
+{
+    ui->loansListWidget->clear();
+
+    if (!account) return;
+
+    auto loans = account->getLoans();
+    for (size_t i = 0; i < loans.size(); ++i) {
+        const auto& loan = loans[i];
+        ui->loansListWidget->addItem(
+            QString("Loan %1: €%2 (%3%)")
+                .arg(i+1)
+                .arg(loan.amount)
+                .arg(loan.interestRate)
+            );
+    }
+}
+
 void LoansDialog::on_requestLoanButton_clicked()
 {
-    if (!account) {
-        QMessageBox::warning(this, "Error", "No account available");
+    if (!account) return;
+
+    double amount = ui->amountSpinBox->value();
+    double interest = ui->interestSpinBox->value();
+
+    if (amount <= 0) {
+        QMessageBox::warning(this, "Error", "Amount must be positive");
         return;
     }
 
-    QMessageBox::information(
-        this,
-        "Not implemented",
-        "Loan functionality is not implemented in Bank"
-        );
+    account->requestLoan(amount, interest);
+    QMessageBox::information(this, "Success", "Loan granted");
+    refreshLoans();
 }
 
 void LoansDialog::on_payLoanButton_clicked()
 {
-    if (!account) {
-        QMessageBox::warning(this, "Error", "No account available");
+    if (!account) return;
+
+    int row = ui->loansListWidget->currentRow();
+    if (row < 0) {
+        QMessageBox::warning(this, "Error", "Select a loan first");
         return;
     }
 
-    QMessageBox::information(
-        this,
-        "Not implemented",
-        "Loan functionality is not implemented in Bank"
-        );
+    if (account->payLoan(row)) {
+        QMessageBox::information(this, "Success", "Loan paid");
+        refreshLoans();
+    } else {
+        QMessageBox::warning(this, "Error", "Insufficient balance");
+    }
 }
 
 void LoansDialog::on_backButton_clicked()
 {
-    accept(); // closes dialog
+    accept(); // close dialog
 }
