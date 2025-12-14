@@ -19,10 +19,15 @@ public:
 private slots:
     void on_depositBtn_clicked();
     void on_withdrawBtn_clicked();
+    void on_accountList_currentRowChanged(int row); // 🔥 account selection changed
 
 private:
+    void refreshAccounts();
+    void refreshHistory();
+
     Ui::DepositWithdrawDialog *ui;
-    MiniBank::Account* account; // ✅ store logged-in account
+    MiniBank::Account* account;
+    std::vector<MiniBank::Account*> allAccounts; // 🔥 for all accounts (if multiple)
 };
 
 #endif
