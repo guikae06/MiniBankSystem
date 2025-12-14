@@ -12,6 +12,10 @@ StockMarketDialog::StockMarketDialog(MiniBank::Bank* b,
 {
     ui->setupUi(this);
     ui->stockTextEdit->setText("Market ready");
+
+    // ✅ FIX: back button actually closes the dialog
+    connect(ui->backButton, &QPushButton::clicked,
+            this, &QDialog::accept);
 }
 
 StockMarketDialog::~StockMarketDialog()
