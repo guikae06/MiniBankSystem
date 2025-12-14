@@ -19,7 +19,6 @@ HEADERS += \
     headers/AuthManager.h \
     headers/StockMarket.h \
     gui/LogInDialog.h \
-    gui/TransferDialog.h \
 
 
 SOURCES += \
@@ -36,8 +35,7 @@ SOURCES += \
     src/AuthManager.cpp \
     src/StockMarket.cpp \
     gui/main.cpp \
-    gui/LogInDialog.cpp \
-    gui/TransferDialog.cpp
+    gui/LogInDialog.cpp
 
 FORMS += \
     gui/DepositWithdrawDialog.ui \
@@ -45,8 +43,7 @@ FORMS += \
     gui/LoansDialog.ui \
     gui/MainMenuDialog.ui \
     gui/StockMarketDialog.ui \
-    gui/LogInDialog.ui \
-    gui/TransferDialog.ui
+    gui/LogInDialog.ui
 
 # Make sure to link charts if using Qt Charts
 QT += charts
