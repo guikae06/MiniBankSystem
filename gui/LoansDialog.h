@@ -13,16 +13,18 @@ class LoansDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoansDialog(MiniBank::Bank* bank, QWidget *parent = nullptr);
+    // ✅ Constructor takes logged-in Account directly
+    explicit LoansDialog(MiniBank::Account* account, QWidget *parent = nullptr);
     ~LoansDialog();
 
 private slots:
     void on_requestLoanButton_clicked();
     void on_payLoanButton_clicked();
+    void on_backButton_clicked();
 
 private:
     Ui::LoansDialog *ui;
-    MiniBank::Bank* bank;
+    MiniBank::Account* account; // Logged-in account
 };
 
 #endif // LOANSDIALOG_H

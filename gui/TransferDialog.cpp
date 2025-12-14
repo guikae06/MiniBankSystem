@@ -2,12 +2,15 @@
 #include "ui_TransferDialog.h"
 #include <QMessageBox>
 
-TransferDialog::TransferDialog(MiniBank::Bank* b, QWidget *parent) :
-    QDialog(parent),
+TransferDialog::TransferDialog(MiniBank::Account* senderAccount, MiniBank::Bank* b, QWidget *parent)
+    : QDialog(parent),
     ui(new Ui::TransferDialog),
+    sender(senderAccount),
     bank(b)
 {
     ui->setupUi(this);
+
+    // Back button closes the dialog
     connect(ui->backButton, &QPushButton::clicked, this, &QDialog::accept);
 }
 
@@ -18,22 +21,29 @@ TransferDialog::~TransferDialog()
 
 void TransferDialog::on_transferButton_clicked()
 {
-    unsigned int fromId = ui->fromIdSpinBox->value();
-    unsigned int toId = ui->toIdSpinBox->value();
-    double amount = ui->amountDoubleSpinBox->value();
-
-    auto fromAcc = bank->findAccount(fromId);
-    auto toAcc = bank->findAccount(toId);
-
-    if(!fromAcc || !toAcc) {
-        QMessageBox::warning(this, "Error", "Invalid account(s)");
+    if (!sender || !bank) {
+        QMessageBox::warning(this, "Error", "Sender account or bank not available");
         return;
     }
 
-    if(fromAcc->withdraw(amount)) {
+    unsigned int toId = ui->toIdSpinBox->value();
+    double amount = ui->amountDoubleSpinBox->value();
+
+    auto toAcc = bank->findAccount(toId);
+    if(!toAcc) {
+        QMessageBox::warning(this, "Error", "Target account not found");
+        return;
+    }
+
+    if(sender->withdraw(amount)) {
         toAcc->deposit(amount);
         QMessageBox::information(this, "Success", "Transfer completed");
     } else {
         QMessageBox::warning(this, "Error", "Insufficient funds");
     }
+}
+
+void TransferDialog::on_backButton_clicked()
+{
+    accept(); // closes dialog
 }

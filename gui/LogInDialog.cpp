@@ -24,13 +24,14 @@ void LogInDialog::on_loginButton_clicked()
     std::string username = ui->usernameLineEdit->text().toStdString();
     std::string password = ui->passwordLineEdit->text().toStdString();
 
-    MiniBank::Account* acc = bank->loginUser(username, password);
-    if (!acc) {
+    loggedAccount = bank->loginUser(username, password);
+    if (!loggedAccount) {
         QMessageBox::warning(this, "Error", "Invalid username or password");
         return;
     }
 
-    MainMenuDialog menu(bank, market);
+    // Pass the logged-in account to MainMenuDialog
+    MainMenuDialog menu(bank, market, loggedAccount);
     menu.exec();
 }
 
@@ -39,15 +40,16 @@ void LogInDialog::on_signupButton_clicked()
     std::string username = ui->usernameLineEdit->text().toStdString();
     std::string password = ui->passwordLineEdit->text().toStdString();
 
-    MiniBank::Account* acc = bank->createCheckingAccount(username);
+    loggedAccount = bank->createCheckingAccount(username);
 
-    if (!bank->registerUser(username, password, acc)) {
+    if (!bank->registerUser(username, password, loggedAccount)) {
         QMessageBox::warning(this, "Error", "Username already exists");
         return;
     }
 
     QMessageBox::information(this, "Success", "Successfully registered");
 
-    MainMenuDialog menu(bank, market);
+    // Pass the logged-in account to MainMenuDialog
+    MainMenuDialog menu(bank, market, loggedAccount);
     menu.exec();
 }

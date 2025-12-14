@@ -2,31 +2,31 @@
 #include "ui_AssuranceDialog.h"
 #include <QMessageBox>
 
-struct InsuranceItem {
-    QString name;
-    double price;
-};
-
-static const InsuranceItem INSURANCES[] = {
+// ✅ Define available insurances outside class (now allowed)
+static const AssuranceDialog::InsuranceItem INSURANCES[] = {
     {"Health Insurance", 100.0},
     {"Car Insurance", 150.0},
     {"Home Insurance", 200.0}
 };
 
-AssuranceDialog::AssuranceDialog(MiniBank::Bank* b, QWidget *parent)
+AssuranceDialog::AssuranceDialog(MiniBank::Account* acc, QWidget *parent)
     : QDialog(parent),
     ui(new Ui::AssuranceDialog),
-    bank(b)
+    account(acc)
 {
     ui->setupUi(this);
 
+    // Populate combo box and availableInsurances vector
     for (const auto& ins : INSURANCES) {
-        ui->insuranceComboBox->addItem(
-            ins.name + " (€" + QString::number(ins.price) + ")"
-            );
+        ui->insuranceComboBox->addItem(ins.name + " (€" + QString::number(ins.price) + ")");
+        availableInsurances.append(ins);
     }
 
+    // Back button closes dialog
     connect(ui->backButton, &QPushButton::clicked, this, &QDialog::accept);
+
+    // Show owned insurances
+    refreshOwnedInsurances();
 }
 
 AssuranceDialog::~AssuranceDialog()
@@ -36,19 +36,18 @@ AssuranceDialog::~AssuranceDialog()
 
 void AssuranceDialog::on_buyButton_clicked()
 {
-    unsigned int accId = ui->accountIdSpinBox->value();
-    auto acc = bank->findAccount(accId);
-
-    if (!acc) {
-        QMessageBox::warning(this, "Error", "Account not found");
+    if (!account) {
+        QMessageBox::warning(this, "Error", "No account available");
         return;
     }
 
     int index = ui->insuranceComboBox->currentIndex();
-    auto insurance = INSURANCES[index];
+    if (index < 0 || index >= availableInsurances.size()) return;
 
-    if (!acc->buyInsurance(insurance.name.toStdString(), insurance.price)) {
-        QMessageBox::warning(this, "Error", "Cannot buy insurance");
+    auto insurance = availableInsurances[index];
+
+    if (!account->buyInsurance(insurance.name.toStdString(), insurance.price)) {
+        QMessageBox::warning(this, "Error", "Cannot buy insurance (insufficient funds)");
         return;
     }
 
@@ -58,27 +57,16 @@ void AssuranceDialog::on_buyButton_clicked()
 
 void AssuranceDialog::refreshOwnedInsurances()
 {
+    if (!account) return;
+
     ui->ownedListWidget->clear();
-
-    unsigned int accId = ui->accountIdSpinBox->value();
-    auto acc = bank->findAccount(accId);
-    if (!acc) return;
-
-    for (const auto& ins : acc->getInsurances()) {
-        ui->ownedListWidget->addItem(
-            QString::fromStdString(ins.name) +
-            " (€" + QString::number(ins.price) + ")"
-            );
+    for (const auto& ins : account->getInsurances()) {
+        ui->ownedListWidget->addItem(QString::fromStdString(ins.name) +
+                                     " (€" + QString::number(ins.price) + ")");
     }
 }
 
-// ===== MISSING SLOTS FIX =====
 void AssuranceDialog::on_backButton_clicked()
 {
-    accept(); // closes dialog and returns to main menu
-}
-
-void AssuranceDialog::on_accountIdSpinBox_valueChanged(int)
-{
-    refreshOwnedInsurances();
+    accept(); // closes dialog
 }

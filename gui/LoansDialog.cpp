@@ -2,12 +2,14 @@
 #include "ui_LoansDialog.h"
 #include <QMessageBox>
 
-LoansDialog::LoansDialog(MiniBank::Bank* b, QWidget *parent)
+LoansDialog::LoansDialog(MiniBank::Account* acc, QWidget *parent)
     : QDialog(parent),
     ui(new Ui::LoansDialog),
-    bank(b)
+    account(acc)
 {
     ui->setupUi(this);
+
+    // Back button closes dialog
     connect(ui->backButton, &QPushButton::clicked, this, &QDialog::accept);
 }
 
@@ -18,6 +20,11 @@ LoansDialog::~LoansDialog()
 
 void LoansDialog::on_requestLoanButton_clicked()
 {
+    if (!account) {
+        QMessageBox::warning(this, "Error", "No account available");
+        return;
+    }
+
     QMessageBox::information(
         this,
         "Not implemented",
@@ -27,9 +34,19 @@ void LoansDialog::on_requestLoanButton_clicked()
 
 void LoansDialog::on_payLoanButton_clicked()
 {
+    if (!account) {
+        QMessageBox::warning(this, "Error", "No account available");
+        return;
+    }
+
     QMessageBox::information(
         this,
         "Not implemented",
         "Loan functionality is not implemented in Bank"
         );
+}
+
+void LoansDialog::on_backButton_clicked()
+{
+    accept(); // closes dialog
 }

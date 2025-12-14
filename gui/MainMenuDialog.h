@@ -16,6 +16,7 @@ class MainMenuDialog : public QDialog
 public:
     explicit MainMenuDialog(MiniBank::Bank* bank,
                             MiniBank::StockMarket* market,
+                            MiniBank::Account* account,
                             QWidget *parent = nullptr);
     ~MainMenuDialog();
 
@@ -30,6 +31,7 @@ private:
     Ui::MainMenuDialog *ui;
     MiniBank::Bank* bank;
     MiniBank::StockMarket* market;
+    MiniBank::Account* account; // ✅ Add logged-in account here
 };
 
 #endif

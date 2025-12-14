@@ -13,15 +13,18 @@ class TransferDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit TransferDialog(MiniBank::Bank* bank, QWidget *parent = nullptr);
+    // ✅ Constructor takes the logged-in account + bank
+    explicit TransferDialog(MiniBank::Account* senderAccount, MiniBank::Bank* bank, QWidget *parent = nullptr);
     ~TransferDialog();
 
 private slots:
     void on_transferButton_clicked();
+    void on_backButton_clicked();
 
 private:
     Ui::TransferDialog *ui;
-    MiniBank::Bank* bank;
+    MiniBank::Account* sender; // Logged-in account
+    MiniBank::Bank* bank;      // For finding other accounts
 };
 
 #endif // TRANSFERDIALOG_H

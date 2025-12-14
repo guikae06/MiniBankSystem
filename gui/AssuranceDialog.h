@@ -2,6 +2,8 @@
 #define ASSURANCEDIALOG_H
 
 #include <QDialog>
+#include <QVector>
+#include <QString>
 #include "Bank.h"
 
 namespace Ui {
@@ -13,29 +15,25 @@ class AssuranceDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AssuranceDialog(MiniBank::Bank* bank, QWidget *parent = nullptr);
-
+    explicit AssuranceDialog(MiniBank::Account* account, QWidget *parent = nullptr);
     ~AssuranceDialog();
 
-private slots:
-    void on_buyButton_clicked();
-    void on_backButton_clicked();
-    void on_accountIdSpinBox_valueChanged(int value);
-
-
-private:
-    void loadInsurances();
-    void refreshOwnedInsurances();
-
-    Ui::AssuranceDialog *ui;
-    MiniBank::Bank* bank;
-
-    struct Insurance {
+    // ✅ Public so static array outside class can access it
+    struct InsuranceItem {
         QString name;
         double price;
     };
 
-    QVector<Insurance> availableInsurances;
+private slots:
+    void on_buyButton_clicked();
+    void on_backButton_clicked();
+
+private:
+    void refreshOwnedInsurances();
+
+    Ui::AssuranceDialog *ui;
+    MiniBank::Account* account; // Logged-in account
+    QVector<InsuranceItem> availableInsurances;
 };
 
-#endif
+#endif // ASSURANCEDIALOG_H

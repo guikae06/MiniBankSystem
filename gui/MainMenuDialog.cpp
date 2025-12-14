@@ -8,13 +8,16 @@
 
 MainMenuDialog::MainMenuDialog(MiniBank::Bank* b,
                                MiniBank::StockMarket* m,
+                               MiniBank::Account* a,
                                QWidget *parent)
     : QDialog(parent),
     ui(new Ui::MainMenuDialog),
     bank(b),
-    market(m)
+    market(m),
+    account(a)  // ✅ initialize logged-in account
 {
     ui->setupUi(this);
+    ui->labelBalance->setText(QString::number(account->getBalance(), 'f', 2));
 }
 
 MainMenuDialog::~MainMenuDialog()
@@ -24,30 +27,38 @@ MainMenuDialog::~MainMenuDialog()
 
 void MainMenuDialog::on_depositWithdrawButton_clicked()
 {
-    DepositWithdrawDialog dlg(bank);
+    DepositWithdrawDialog dlg(account); // Pass logged-in account
     dlg.exec();
 }
 
 void MainMenuDialog::on_loansButton_clicked()
 {
-    LoansDialog dlg(bank);
+    LoansDialog dlg(account); // Pass logged-in account
     dlg.exec();
 }
 
 void MainMenuDialog::on_assuranceButton_clicked()
 {
-    AssuranceDialog dlg(bank);
+    AssuranceDialog dlg(account);
     dlg.exec();
 }
 
 void MainMenuDialog::on_stockMarketButton_clicked()
 {
-    StockMarketDialog dlg(bank, market);
+    StockMarketDialog dlg(account, market);
     dlg.exec();
+
+    ui->labelBalance->setText(
+        QString::number(account->getBalance(), 'f', 2)
+        );
 }
 
 void MainMenuDialog::on_transferButton_clicked()
 {
-    TransferDialog dlg(bank);
+    TransferDialog dlg(account, bank); // sender = logged-in account
     dlg.exec();
+
+    ui->labelBalance->setText(
+        QString::number(account->getBalance(), 'f', 2)
+        );
 }

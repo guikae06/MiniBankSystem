@@ -2,7 +2,7 @@
 #define DEPOSITWITHDRAWDIALOG_H
 
 #include <QDialog>
-#include "../headers/Bank.h"
+#include "../headers/Account.h"
 
 namespace Ui {
 class DepositWithdrawDialog;
@@ -13,8 +13,7 @@ class DepositWithdrawDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DepositWithdrawDialog(MiniBank::Bank* bank, QWidget *parent = nullptr);
-
+    explicit DepositWithdrawDialog(MiniBank::Account* account, QWidget *parent = nullptr);
     ~DepositWithdrawDialog();
 
 private slots:
@@ -23,7 +22,7 @@ private slots:
 
 private:
     Ui::DepositWithdrawDialog *ui;
-    MiniBank::Bank* bank;
+    MiniBank::Account* account; // ✅ store logged-in account
 };
 
-#endif // DEPOSITWITHDRAWDIALOG_H
+#endif

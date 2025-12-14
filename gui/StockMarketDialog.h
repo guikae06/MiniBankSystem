@@ -2,7 +2,7 @@
 #define STOCKMARKETDIALOG_H
 
 #include <QDialog>
-#include "../headers/Bank.h"
+#include "../headers/Account.h"
 #include "../headers/StockMarket.h"
 
 namespace Ui {
@@ -14,7 +14,7 @@ class StockMarketDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit StockMarketDialog(MiniBank::Bank* bank,
+    explicit StockMarketDialog(MiniBank::Account* account,
                                MiniBank::StockMarket* market,
                                QWidget *parent = nullptr);
     ~StockMarketDialog();
@@ -25,7 +25,7 @@ private slots:
 
 private:
     Ui::StockMarketDialog *ui;
-    MiniBank::Bank* bank;
+    MiniBank::Account* account;      // ✅ logged-in account
     MiniBank::StockMarket* market;
 };
 
