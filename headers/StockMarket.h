@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QThread>
 #include <QString>
-#include <map>
+#include <vector>
 #include <mutex>
 #include <random>
 
-    namespace MiniBank {
+namespace MiniBank {
 
 struct Stock {
     std::string name;
@@ -42,6 +42,6 @@ private:
     void simulatePrices();
 };
 
-}
+} // namespace MiniBank
 
 #endif // STOCKMARKET_H

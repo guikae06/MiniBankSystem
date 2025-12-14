@@ -2,6 +2,8 @@
 #define STOCKMARKETDIALOG_H
 
 #include <QDialog>
+#include <QTimer>
+#include <map>
 #include "../headers/Account.h"
 #include "../headers/StockMarket.h"
 
@@ -22,11 +24,16 @@ public:
 private slots:
     void on_buyButton_clicked();
     void on_sellButton_clicked();
+    void updateStockPrice(const std::string& symbol, double price);
 
 private:
+    void populateStockTable();
+    void updatePortfolioTable();
+
     Ui::StockMarketDialog *ui;
-    MiniBank::Account* account;      // ✅ logged-in account
+    MiniBank::Account* account;
     MiniBank::StockMarket* market;
+    std::map<std::string, unsigned int> portfolio; // symbol -> shares
 };
 
 #endif

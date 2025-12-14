@@ -1,17 +1,25 @@
 #include "StockMarket.h"
-#include <QTimer>
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <algorithm>
 
 namespace MiniBank {
 
 StockMarket::StockMarket(QObject* parent)
     : QObject(parent), workerThread(nullptr), running(false)
 {
+    // 10 stocks
     stocks.push_back({"Apple", "AAPL", 150.0, 0.02});
     stocks.push_back({"Google", "GOOG", 2800.0, 0.015});
     stocks.push_back({"Amazon", "AMZN", 3400.0, 0.017});
+    stocks.push_back({"Microsoft", "MSFT", 300.0, 0.018});
+    stocks.push_back({"Tesla", "TSLA", 900.0, 0.03});
+    stocks.push_back({"Facebook", "META", 350.0, 0.02});
+    stocks.push_back({"Netflix", "NFLX", 550.0, 0.025});
+    stocks.push_back({"Nvidia", "NVDA", 500.0, 0.03});
+    stocks.push_back({"Intel", "INTC", 55.0, 0.015});
+    stocks.push_back({"AMD", "AMD", 100.0, 0.02});
 }
 
 StockMarket::~StockMarket() {
@@ -21,6 +29,7 @@ StockMarket::~StockMarket() {
 void StockMarket::startSimulation() {
     if (running) return;
     running = true;
+
     workerThread = QThread::create([this](){ simulatePrices(); });
     workerThread->start();
 }
@@ -28,6 +37,7 @@ void StockMarket::startSimulation() {
 void StockMarket::stopSimulation() {
     if (!running) return;
     running = false;
+
     if (workerThread) {
         workerThread->quit();
         workerThread->wait();
@@ -68,7 +78,7 @@ void StockMarket::simulatePrices() {
                 emit stockPriceUpdated(s.symbol, s.price);
             }
         }
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(10)); // 🔹 update every 10s
     }
 }
 
