@@ -1,22 +1,22 @@
-#include "AssuranceDialog.h"
-#include "ui_AssuranceDialog.h"
+#include "InssuranceDialog.h"
+#include "ui_InssuranceDialog.h"
 #include <QMessageBox>
 
-// ✅ Define available insurances outside class (now allowed)
-static const AssuranceDialog::InsuranceItem INSURANCES[] = {
+// Available insurances
+static const InssuranceDialog::InsuranceItem INSURANCES[] = {
     {"Health Insurance", 100.0},
     {"Car Insurance", 150.0},
     {"Home Insurance", 200.0}
 };
 
-AssuranceDialog::AssuranceDialog(MiniBank::Account* acc, QWidget *parent)
+InssuranceDialog::InssuranceDialog(MiniBank::Account* acc, QWidget *parent)
     : QDialog(parent),
-    ui(new Ui::AssuranceDialog),
+    ui(new Ui::InssuranceDialog),
     account(acc)
 {
     ui->setupUi(this);
 
-    // Populate combo box and availableInsurances vector
+    // Populate combo box and store insurances
     for (const auto& ins : INSURANCES) {
         ui->insuranceComboBox->addItem(ins.name + " (€" + QString::number(ins.price) + ")");
         availableInsurances.append(ins);
@@ -29,12 +29,12 @@ AssuranceDialog::AssuranceDialog(MiniBank::Account* acc, QWidget *parent)
     refreshOwnedInsurances();
 }
 
-AssuranceDialog::~AssuranceDialog()
+InssuranceDialog::~InssuranceDialog()
 {
     delete ui;
 }
 
-void AssuranceDialog::on_buyButton_clicked()
+void InssuranceDialog::on_buyButton_clicked()
 {
     if (!account) {
         QMessageBox::warning(this, "Error", "No account available");
@@ -55,18 +55,19 @@ void AssuranceDialog::on_buyButton_clicked()
     refreshOwnedInsurances();
 }
 
-void AssuranceDialog::refreshOwnedInsurances()
+void InssuranceDialog::refreshOwnedInsurances()
 {
     if (!account) return;
 
     ui->ownedListWidget->clear();
     for (const auto& ins : account->getInsurances()) {
-        ui->ownedListWidget->addItem(QString::fromStdString(ins.name) +
-                                     " (€" + QString::number(ins.price) + ")");
+        ui->ownedListWidget->addItem(
+            QString::fromStdString(ins.name) + " (€" + QString::number(ins.price) + ")"
+            );
     }
 }
 
-void AssuranceDialog::on_backButton_clicked()
+void InssuranceDialog::on_backButton_clicked()
 {
     accept(); // closes dialog
 }
