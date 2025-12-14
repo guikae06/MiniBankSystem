@@ -19,6 +19,7 @@ Account::Account(const Account& other)
     balance = other.balance;
     accountNumber = other.accountNumber;
     insurances = other.insurances;
+    history = other.history;
 }
 
 Account::~Account() {}
@@ -27,6 +28,7 @@ void Account::deposit(double amount)
 {
     std::lock_guard<std::mutex> lock(mtx);
     balance += amount;
+    history.push_back({"Deposit", amount}); // 🔥 add transaction
 }
 
 bool Account::withdraw(double amount)
@@ -34,6 +36,7 @@ bool Account::withdraw(double amount)
     std::lock_guard<std::mutex> lock(mtx);
     if (balance >= amount) {
         balance -= amount;
+        history.push_back({"Withdrawal", amount}); // 🔥 add transaction
         return true;
     }
     return false;
@@ -53,16 +56,13 @@ std::string Account::getAccountNumber() const
     return accountNumber;
 }
 
-// 🔥 BUY INSURANCE
 bool Account::buyInsurance(const std::string& name, double price)
 {
     std::lock_guard<std::mutex> lock(mtx);
-
-    if (balance < price)
-        return false;
-
+    if (balance < price) return false;
     balance -= price;
     insurances.push_back({name, price});
+    history.push_back({"Insurance: " + name, price}); // 🔥 optional
     return true;
 }
 
@@ -70,6 +70,12 @@ std::vector<Insurance> Account::getInsurances() const
 {
     std::lock_guard<std::mutex> lock(mtx);
     return insurances;
+}
+
+std::vector<Transaction> Account::getHistory() const
+{
+    std::lock_guard<std::mutex> lock(mtx);
+    return history;
 }
 
 Account& Account::operator=(const Account& other)
@@ -81,6 +87,7 @@ Account& Account::operator=(const Account& other)
         balance = other.balance;
         accountNumber = other.accountNumber;
         insurances = other.insurances;
+        history = other.history;
     }
     return *this;
 }

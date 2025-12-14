@@ -12,6 +12,11 @@ struct Insurance {
     double price;
 };
 
+struct Transaction {
+    std::string type; // "Deposit" or "Withdrawal"
+    double amount;
+};
+
 class Account {
 protected:
     unsigned int id;
@@ -19,6 +24,7 @@ protected:
     double balance;
     std::string accountNumber;
     std::vector<Insurance> insurances;
+    std::vector<Transaction> history; // 🔥 transaction history
     mutable std::mutex mtx;
 
 public:
@@ -27,7 +33,6 @@ public:
     Account(const Account& other);
     virtual ~Account();
 
-    // 🔥 MOET VIRTUAL ZIJN
     virtual void deposit(double amount);
     virtual bool withdraw(double amount);
 
@@ -39,11 +44,13 @@ public:
     bool buyInsurance(const std::string& name, double price);
     std::vector<Insurance> getInsurances() const;
 
+    // 🔥 New: transaction history getter
+    std::vector<Transaction> getHistory() const;
+
     virtual void printInfo() const = 0;
 
     Account& operator=(const Account& other);
 };
 
 } // namespace MiniBank
-
 #endif
