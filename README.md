@@ -1,56 +1,99 @@
-# MiniBankSystem
+# MiniBank Qt Application
 
-A simple Qt-based banking application demonstrating **object-oriented programming** concepts in C++, including:
-
-- **Inheritance** and **polymorphism**
-- **Virtual functions**
-- **Thread-safe operations**
-- **File saving and autosave**
-
-This project manages **checking and savings accounts**, allowing deposits, withdrawals, and interest application for savings accounts.
+MiniBank is a Qt-based desktop banking application written in C++ that simulates basic banking operations, insurance management, loans, and a simple stock market system. The project uses object-oriented principles, multi-threading, and file persistence to provide a complete mini banking experience.
 
 ---
 
 ## Features
 
-1. **Account Types**
-   - **SavingsAccount**: Supports interest calculation.
-   - **CheckingAccount**: Supports overdraft and fees.
+### User Management
+- Login using a username (no password required for simplicity)
+- Automatically creates a new checking account if the username does not exist
+- Display of user account information
 
-2. **Bank Class**
-   - Create and manage multiple accounts.
-   - Thread-safe operations using `std::mutex`.
-   - Autosave account data to file in a separate thread.
-   - Find accounts by ID.
+### Account Operations
+- Deposit and withdrawal of funds
+- Viewing transaction history
+- Support for multiple account types:
+  - **Checking Account** with overdraft support
+  - **Savings Account** with interest accrual
 
-3. **GUI**
-   - Built with Qt5/Qt6.
-   - Deposit, withdraw, and add interest functionality.
-   - Displays current balance.
-   - Simple dark theme with gold accents.
+### Loans
+- Request a loan with a specific amount and interest rate
+- Pay back loans partially or fully
+- Loan history tracking
 
-4. **Safe Withdrawals**
-   - Checking accounts can withdraw up to `balance + overdraft`.
-   - Savings accounts cannot overdraft.
+### Insurance
+- Purchase predefined insurances (Health, Car, Home)
+- View owned insurances
+- Funds deducted automatically when purchasing insurance
 
-5. **File Saving**
-   - Saves all accounts to a CSV file.
-   - Autosave functionality every 5 seconds (configurable).
+### Stock Market Simulation
+- Buy and sell shares of predefined stocks
+- Dynamic stock price simulation (multi-threaded)
+- Portfolio overview with current value of owned shares
+
+### Persistence
+- Save and load bank data including accounts, users, loans, insurances, and transaction history
 
 ---
 
+## Project Structure
 
-## How to Build
+MiniBank/
+├── headers/
+│ ├── Account.h
+│ ├── AuthManager.h
+│ ├── Bank.h
+│ ├── CheckingAccount.h
+│ ├── SavingsAccount.h
+│ ├── StockMarket.h
+│ ├── DepositWithdrawDialog.h
+│ ├── LoansDialog.h
+│ ├── InssuranceDialog.h
+│ ├── LogInDialog.h
+│ ├── MainMenuDialog.h
+│ └── FileStorage.h
+├── src/
+│ ├── Account.cpp
+│ ├── AuthManager.cpp
+│ ├── Bank.cpp
+│ ├── CheckingAccount.cpp
+│ ├── SavingsAccount.cpp
+│ ├── StockMarket.cpp
+│ ├── DepositWithdrawDialog.cpp
+│ ├── LoansDialog.cpp
+│ ├── InssuranceDialog.cpp
+│ ├── LogInDialog.cpp
+│ ├── MainMenuDialog.cpp
+│ └── StockMarketDialog.cpp
+├── ui/
+│ ├── DepositWithdrawDialog.ui
+│ ├── LoansDialog.ui
+│ ├── InssuranceDialog.ui
+│ ├── LogInDialog.ui
+│ ├── MainMenuDialog.ui
+│ └── StockMarketDialog.ui
+├── main.cpp
+└── README.md
+---
 
-1. **Install Qt5/Qt6** on your system.
-2. Open the project in **Qt Creator**.
-3. Run **qmake** to generate the Makefile (usually automatic).
-4. Build and run.
+## Installation
 
-Or via command line:
+### Requirements
+- Qt 5 or Qt 6 (Qt Creator recommended)
+- C++17 compatible compiler (GCC, Clang, MSVC)
+- CMake 3.10+ (optional for command-line build)
 
+### Building with Qt Creator
+1. Open the project in Qt Creator.
+2. Configure the kit (Desktop Qt with C++17).
+3. Build and run the project.
+
+### Building with CMake (Optional)
 ```bash
-qmake MiniBankSystem.pro
-make
-./MiniBankSystem
-
+mkdir build
+cd build
+cmake ..
+cmake --build .
+./MiniBank
