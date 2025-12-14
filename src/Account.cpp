@@ -1,12 +1,7 @@
 #include "Account.h"
-#include <iostream>
-#include <algorithm>
 
 namespace MiniBank {
 
-// ---------------------------
-// Constructors & Destructor
-// ---------------------------
 Account::Account() : id(0), ownerName(""), balance(0.0), accountNumber("") {}
 
 Account::Account(unsigned int id, const std::string& owner, double bal)
@@ -18,20 +13,11 @@ Account::Account(unsigned int id, const std::string& owner, double bal)
 Account::Account(const Account& other)
 {
     std::lock_guard<std::mutex> lock(other.mtx);
-    id = other.id;
-    ownerName = other.ownerName;
-    balance = other.balance;
-    accountNumber = other.accountNumber;
-    insurances = other.insurances;
-    history = other.history;
-    loans = other.loans;
+    *this = other;
 }
 
 Account::~Account() {}
 
-// ---------------------------
-// Deposit & Withdraw
-// ---------------------------
 void Account::deposit(double amount)
 {
     if (amount <= 0) return;
@@ -52,9 +38,6 @@ bool Account::withdraw(double amount)
     return false;
 }
 
-// ---------------------------
-// Loans
-// ---------------------------
 std::vector<Loan> Account::getLoans() const
 {
     std::lock_guard<std::mutex> lock(mtx);
@@ -66,41 +49,35 @@ void Account::requestLoan(double amount, double interestRate)
     if (amount <= 0 || interestRate <= 0) return;
     std::lock_guard<std::mutex> lock(mtx);
     loans.push_back({amount, interestRate});
-    balance += amount; // Add loan to account balance
+    balance += amount;
     history.push_back({"Loan received", amount});
 }
 
 bool Account::payLoan(int index)
 {
     std::lock_guard<std::mutex> lock(mtx);
-    if (index < 0 || index >= loans.size()) return false;
-    Loan loan = loans[index];
-    double totalToPay = loan.amount * (1.0 + loan.interestRate / 100.0);
-    if (balance >= totalToPay) {
-        balance -= totalToPay;
-        loans.erase(loans.begin() + index);
-        history.push_back({"Loan paid", totalToPay});
-        return true;
-    }
-    return false;
+    if (index < 0 || index >= (int)loans.size()) return false;
+
+    double total = loans[index].amount * (1.0 + loans[index].interestRate / 100.0);
+    if (balance < total) return false;
+
+    balance -= total;
+    loans.erase(loans.begin() + index);
+    history.push_back({"Loan paid", total});
+    return true;
 }
 
-// ---------------------------
-// Account info
-// ---------------------------
 unsigned int Account::getId() const { return id; }
 std::string Account::getOwnerName() const { return ownerName; }
 double Account::getBalance() const { return balance; }
 std::string Account::getAccountNumber() const { return accountNumber; }
 
-// ---------------------------
-// Insurance
-// ---------------------------
 bool Account::buyInsurance(const std::string& name, double price)
 {
     if (price <= 0) return false;
     std::lock_guard<std::mutex> lock(mtx);
     if (balance < price) return false;
+
     balance -= price;
     insurances.push_back({name, price});
     history.push_back({"Insurance", price});
@@ -113,23 +90,16 @@ std::vector<Insurance> Account::getInsurances() const
     return insurances;
 }
 
-// ---------------------------
-// Transaction history
-// ---------------------------
 std::vector<Transaction> Account::getHistory() const
 {
     std::lock_guard<std::mutex> lock(mtx);
     return history;
 }
 
-// ---------------------------
-// Operator=
-// ---------------------------
 Account& Account::operator=(const Account& other)
 {
     if (this == &other) return *this;
-    std::lock_guard<std::mutex> lockThis(mtx);
-    std::lock_guard<std::mutex> lockOther(other.mtx);
+    std::lock_guard<std::mutex> lock(other.mtx);
 
     id = other.id;
     ownerName = other.ownerName;
@@ -138,6 +108,7 @@ Account& Account::operator=(const Account& other)
     insurances = other.insurances;
     history = other.history;
     loans = other.loans;
+
     return *this;
 }
 

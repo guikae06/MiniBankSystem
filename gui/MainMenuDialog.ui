@@ -22,7 +22,7 @@
      <height>310</height>
     </rect>
    </property>
-   <widget class="QLabel" name="labelAccountName">
+   <widget class="QLabel" name="labelAccount">
     <property name="geometry">
      <rect>
       <x>20</x>

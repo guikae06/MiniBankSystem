@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "../headers/Bank.h"
 #include "../headers/StockMarket.h"
+#include "../headers/Account.h"
 
 namespace Ui {
 class MainMenuDialog;
@@ -26,12 +27,13 @@ private slots:
     void on_inssuranceButton_clicked();
     void on_stockMarketButton_clicked();
 
-
 private:
+    void refreshAccountInfo();   // 🔥 single source of truth
+
     Ui::MainMenuDialog *ui;
     MiniBank::Bank* bank;
     MiniBank::StockMarket* market;
-    MiniBank::Account* account; // ✅ Add logged-in account here
+    MiniBank::Account* account;
 };
 
 #endif
