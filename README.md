@@ -40,42 +40,44 @@ MiniBank is a Qt-based desktop banking application written in C++ that simulates
 
 ## Project Structure
 
-MiniBank/
-├── headers/
-│ ├── Account.h
-│ ├── AuthManager.h
-│ ├── Bank.h
-│ ├── CheckingAccount.h
-│ ├── SavingsAccount.h
-│ ├── StockMarket.h
-│ ├── DepositWithdrawDialog.h
-│ ├── LoansDialog.h
-│ ├── InssuranceDialog.h
-│ ├── LogInDialog.h
-│ ├── MainMenuDialog.h
-│ └── FileStorage.h
-├── src/
-│ ├── Account.cpp
-│ ├── AuthManager.cpp
-│ ├── Bank.cpp
-│ ├── CheckingAccount.cpp
-│ ├── SavingsAccount.cpp
-│ ├── StockMarket.cpp
-│ ├── DepositWithdrawDialog.cpp
-│ ├── LoansDialog.cpp
-│ ├── InssuranceDialog.cpp
-│ ├── LogInDialog.cpp
-│ ├── MainMenuDialog.cpp
-│ └── StockMarketDialog.cpp
-├── ui/
-│ ├── DepositWithdrawDialog.ui
-│ ├── LoansDialog.ui
-│ ├── InssuranceDialog.ui
-│ ├── LogInDialog.ui
-│ ├── MainMenuDialog.ui
-│ └── StockMarketDialog.ui
-├── main.cpp
-└── README.md
+## Project Structure
+
+- **MiniBank/**
+  - **headers/**
+    - `Account.h`
+    - `AuthManager.h`
+    - `Bank.h`
+    - `CheckingAccount.h`
+    - `SavingsAccount.h`
+    - `StockMarket.h`
+    - `DepositWithdrawDialog.h`
+    - `LoansDialog.h`
+    - `InssuranceDialog.h`
+    - `LogInDialog.h`
+    - `MainMenuDialog.h`
+    - `FileStorage.h`
+  - **src/**
+    - `Account.cpp`
+    - `AuthManager.cpp`
+    - `Bank.cpp`
+    - `CheckingAccount.cpp`
+    - `SavingsAccount.cpp`
+    - `StockMarket.cpp`
+    - `DepositWithdrawDialog.cpp`
+    - `LoansDialog.cpp`
+    - `InssuranceDialog.cpp`
+    - `LogInDialog.cpp`
+    - `MainMenuDialog.cpp`
+    - `StockMarketDialog.cpp`
+  - **ui/**
+    - `DepositWithdrawDialog.ui`
+    - `LoansDialog.ui`
+    - `InssuranceDialog.ui`
+    - `LogInDialog.ui`
+    - `MainMenuDialog.ui`
+    - `StockMarketDialog.ui`
+  - `main.cpp`
+  - `README.md`
 ---
 
 ## Installation
