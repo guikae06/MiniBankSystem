@@ -4,7 +4,7 @@
 #include "LoansDialog.h"
 #include "InssuranceDialog.h"
 #include "StockMarketDialog.h"
-#include "TransferDialog.h"
+
 
 MainMenuDialog::MainMenuDialog(MiniBank::Bank* b,
                                MiniBank::StockMarket* m,
@@ -37,7 +37,7 @@ void MainMenuDialog::on_loansButton_clicked()
     dlg.exec();
 }
 
-void MainMenuDialog::on_assuranceButton_clicked()
+void MainMenuDialog::on_inssuranceButton_clicked()
 {
     InssuranceDialog dlg(account);
     dlg.exec();
@@ -53,12 +53,4 @@ void MainMenuDialog::on_stockMarketButton_clicked()
         );
 }
 
-void MainMenuDialog::on_transferButton_clicked()
-{
-    TransferDialog dlg(account, bank); // sender = logged-in account
-    dlg.exec();
 
-    ui->labelBalance->setText(
-        QString::number(account->getBalance(), 'f', 2)
-        );
-}

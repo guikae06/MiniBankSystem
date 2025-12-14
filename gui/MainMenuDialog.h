@@ -23,9 +23,9 @@ public:
 private slots:
     void on_depositWithdrawButton_clicked();
     void on_loansButton_clicked();
-    void on_assuranceButton_clicked();
+    void on_inssuranceButton_clicked();
     void on_stockMarketButton_clicked();
-    void on_transferButton_clicked();
+
 
 private:
     Ui::MainMenuDialog *ui;
