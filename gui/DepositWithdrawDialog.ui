@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DepositWithdrawDialog</class>
+ <widget class="QDialog" name="DepositWithdrawDialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>400</width><height>280</height></rect></property>
+  <property name="windowTitle"><string>Deposit / Withdraw</string></property>
+  <widget class="QWidget" name="widget">
+   <widget class="QLineEdit" name="accountNumberLineEdit"><property name="geometry"><rect><x>120</x><y>40</y><width>200</width><height>30</height></rect></property><property name="placeholderText"><string>Account Number</string></property></widget>
+   <widget class="QLineEdit" name="amountLineEdit"><property name="geometry"><rect><x>120</x><y>80</y><width>200</width><height>30</height></rect></property><property name="placeholderText"><string>Amount</string></property></widget>
+   <widget class="QPushButton" name="depositBtn"><property name="geometry"><rect><x>60</x><y>130</y><width>100</width><height>40</height></rect></property><property name="text"><string>Deposit</string></property></widget>
+   <widget class="QPushButton" name="withdrawBtn"><property name="geometry"><rect><x>220</x><y>130</y><width>100</width><height>40</height></rect></property><property name="text"><string>Withdraw</string></property></widget>
+   <widget class="QPushButton" name="backButton"><property name="geometry"><rect><x>20</x><y>200</y><width>100</width><height>30</height></rect></property><property name="text"><string>Back</string></property></widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
