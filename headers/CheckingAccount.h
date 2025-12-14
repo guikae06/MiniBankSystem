@@ -11,7 +11,10 @@ private:
 
 public:
     CheckingAccount();
-    CheckingAccount(unsigned int id, const std::string& ownerName, double balance, double overdraftLimit = 500.0);
+    CheckingAccount(unsigned int id,
+                    const std::string& ownerName,
+                    double balance,
+                    double overdraftLimit = 500.0);
     CheckingAccount(const CheckingAccount& other);
     ~CheckingAccount() override;
 
@@ -24,4 +27,4 @@ public:
 
 }
 
-#endif // CHECKINGACCOUNT_H
+#endif

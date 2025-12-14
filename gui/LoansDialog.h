@@ -23,7 +23,6 @@ private slots:
 private:
     Ui::LoansDialog *ui;
     MiniBank::Bank* bank;
-    void showMessage(const QString& msg);
 };
 
 #endif // LOANSDIALOG_H

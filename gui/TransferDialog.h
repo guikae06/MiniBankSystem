@@ -22,7 +22,6 @@ private slots:
 private:
     Ui::TransferDialog *ui;
     MiniBank::Bank* bank;
-    void showMessage(const QString& msg);
 };
 
 #endif // TRANSFERDIALOG_H

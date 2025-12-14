@@ -11,14 +11,17 @@ private:
 
 public:
     SavingsAccount();
-    SavingsAccount(unsigned int id, const std::string& ownerName, double balance, double interestRate = 0.03);
+    SavingsAccount(unsigned int id,
+                   const std::string& ownerName,
+                   double balance,
+                   double interestRate = 0.03);
     SavingsAccount(const SavingsAccount& other);
     ~SavingsAccount() override;
 
     void deposit(double amount) override;
     bool withdraw(double amount) override;
-    void accrueInterest(unsigned int days);
 
+    void accrueInterest(unsigned int days);
     void printInfo() const override;
 
     double getInterestRate() const;
@@ -27,4 +30,4 @@ public:
 
 }
 
-#endif // SAVINGSACCOUNT_H
+#endif

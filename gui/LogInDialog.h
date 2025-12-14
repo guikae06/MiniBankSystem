@@ -2,7 +2,8 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
-#include "../headers/AuthManager.h"
+#include "../headers/Bank.h"
+#include "../headers/StockMarket.h"
 
 namespace Ui {
 class LogInDialog;
@@ -13,11 +14,8 @@ class LogInDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LogInDialog(AuthManager* authManager, QWidget *parent = nullptr);
+    explicit LogInDialog(MiniBank::Bank* bank, MiniBank::StockMarket* market, QWidget *parent = nullptr);
     ~LogInDialog();
-
-signals:
-    void loginSuccess();
 
 private slots:
     void on_loginButton_clicked();
@@ -25,7 +23,10 @@ private slots:
 
 private:
     Ui::LogInDialog *ui;
-    AuthManager* authManager;
+    MiniBank::Bank* bank;
+    MiniBank::StockMarket* market;
+    MiniBank::Account* loggedAccount = nullptr;
+
     void showMessage(const QString& msg);
 };
 

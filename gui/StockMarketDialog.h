@@ -14,17 +14,19 @@ class StockMarketDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit StockMarketDialog(MiniBank::Bank* bank, QWidget *parent = nullptr);
+    explicit StockMarketDialog(MiniBank::Bank* bank,
+                               MiniBank::StockMarket* market,
+                               QWidget *parent = nullptr);
     ~StockMarketDialog();
 
 private slots:
     void on_buyButton_clicked();
     void on_sellButton_clicked();
-    void updateStockPrice(const std::string& symbol, double price);
 
 private:
     Ui::StockMarketDialog *ui;
     MiniBank::Bank* bank;
+    MiniBank::StockMarket* market;
 };
 
-#endif // STOCKMARKETDIALOG_H
+#endif

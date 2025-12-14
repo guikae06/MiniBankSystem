@@ -3,18 +3,23 @@
 
 #include <string>
 #include <vector>
-#include <iostream>
 #include <mutex>
 
 namespace MiniBank {
+
+struct Insurance {
+    std::string name;
+    double price;
+};
 
 class Account {
 protected:
     unsigned int id;
     std::string ownerName;
     double balance;
+    std::string accountNumber;
+    std::vector<Insurance> insurances;
     mutable std::mutex mtx;
-    std::string accountNumber; // uniek accountnummer
 
 public:
     Account();
@@ -22,20 +27,23 @@ public:
     Account(const Account& other);
     virtual ~Account();
 
+    // 🔥 MOET VIRTUAL ZIJN
     virtual void deposit(double amount);
     virtual bool withdraw(double amount);
 
     unsigned int getId() const;
     std::string getOwnerName() const;
     double getBalance() const;
+    std::string getAccountNumber() const;
 
-    std::string getAccountNumber() const; // toegevoegd
+    bool buyInsurance(const std::string& name, double price);
+    std::vector<Insurance> getInsurances() const;
 
     virtual void printInfo() const = 0;
 
     Account& operator=(const Account& other);
 };
 
-}
+} // namespace MiniBank
 
-#endif // ACCOUNT_H
+#endif

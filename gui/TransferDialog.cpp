@@ -8,16 +8,12 @@ TransferDialog::TransferDialog(MiniBank::Bank* b, QWidget *parent) :
     bank(b)
 {
     ui->setupUi(this);
-    setWindowTitle("Transfer Funds");
+    connect(ui->backButton, &QPushButton::clicked, this, &QDialog::accept);
 }
 
 TransferDialog::~TransferDialog()
 {
     delete ui;
-}
-
-void TransferDialog::showMessage(const QString& msg) {
-    QMessageBox::information(this, "Info", msg);
 }
 
 void TransferDialog::on_transferButton_clicked()
@@ -26,17 +22,18 @@ void TransferDialog::on_transferButton_clicked()
     unsigned int toId = ui->toIdSpinBox->value();
     double amount = ui->amountDoubleSpinBox->value();
 
-    MiniBank::Account* from = bank->findAccount(fromId);
-    MiniBank::Account* to = bank->findAccount(toId);
+    auto fromAcc = bank->findAccount(fromId);
+    auto toAcc = bank->findAccount(toId);
 
-    if(!from || !to) {
-        showMessage("Invalid account ID(s).");
+    if(!fromAcc || !toAcc) {
+        QMessageBox::warning(this, "Error", "Invalid account(s)");
         return;
     }
 
-    if(bank->transfer(from, to, amount)) {
-        showMessage("Transfer successful!");
+    if(fromAcc->withdraw(amount)) {
+        toAcc->deposit(amount);
+        QMessageBox::information(this, "Success", "Transfer completed");
     } else {
-        showMessage("Transfer failed: insufficient funds.");
+        QMessageBox::warning(this, "Error", "Insufficient funds");
     }
 }

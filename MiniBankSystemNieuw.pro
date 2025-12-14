@@ -7,7 +7,9 @@ INCLUDEPATH += headers
 
 HEADERS += \
     gui/AssuranceDialog.h \
+    gui/DepositWithdrawDialog.h \
     gui/LoansDialog.h \
+    gui/MainMenuDialog.h \
     gui/StockMarketDialog.h \
     headers/Account.h \
     headers/CheckingAccount.h \
@@ -16,14 +18,15 @@ HEADERS += \
     headers/FileStorage.h \
     headers/AuthManager.h \
     headers/StockMarket.h \
-    gui/mainwindow.h \
     gui/LogInDialog.h \
     gui/TransferDialog.h \
 
 
 SOURCES += \
     gui/AssuranceDialog.cpp \
+    gui/DepositWithdrawDialog.cpp \
     gui/LoansDialog.cpp \
+    gui/MainMenuDialog.cpp \
     gui/StockMarketDialog.cpp \
     src/Account.cpp \
     src/CheckingAccount.cpp \
@@ -33,15 +36,15 @@ SOURCES += \
     src/AuthManager.cpp \
     src/StockMarket.cpp \
     gui/main.cpp \
-    gui/mainwindow.cpp \
     gui/LogInDialog.cpp \
     gui/TransferDialog.cpp
 
 FORMS += \
     gui/AssuranceDialog.ui \
+    gui/DepositWithdrawDialog.ui \
     gui/LoansDialog.ui \
+    gui/MainMenuDialog.ui \
     gui/StockMarketDialog.ui \
-    gui/mainwindow.ui \
     gui/LogInDialog.ui \
     gui/TransferDialog.ui
 

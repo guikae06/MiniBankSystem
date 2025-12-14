@@ -1,31 +1,22 @@
 #include "StockMarketDialog.h"
 #include "ui_StockMarketDialog.h"
-#include <QString>
 #include <QMessageBox>
 
-StockMarketDialog::StockMarketDialog(MiniBank::Bank* b, QWidget *parent) :
-    QDialog(parent),
+StockMarketDialog::StockMarketDialog(MiniBank::Bank* b,
+                                     MiniBank::StockMarket* m,
+                                     QWidget *parent)
+    : QDialog(parent),
     ui(new Ui::StockMarketDialog),
-    bank(b)
+    bank(b),
+    market(m)
 {
     ui->setupUi(this);
-    setWindowTitle("Stock Market");
-
-    auto& market = bank->getStockMarket();
-    connect(&market, &MiniBank::StockMarket::stockPriceUpdated, this, &StockMarketDialog::updateStockPrice);
-    market.startSimulation();
+    ui->stockTextEdit->setText("Market ready");
 }
 
 StockMarketDialog::~StockMarketDialog()
 {
-    bank->getStockMarket().stopSimulation();
     delete ui;
-}
-
-void StockMarketDialog::updateStockPrice(const std::string& symbol, double price)
-{
-    QString line = QString::fromStdString(symbol) + ": " + QString::number(price);
-    ui->stockTextEdit->append(line);
 }
 
 void StockMarketDialog::on_buyButton_clicked()
@@ -34,10 +25,16 @@ void StockMarketDialog::on_buyButton_clicked()
     QString symbol = ui->symbolLineEdit->text();
     unsigned int amount = ui->amountSpinBox->value();
 
-    if(bank->getStockMarket().buyStock(accId, symbol.toStdString(), amount))
-        QMessageBox::information(this, "Stock", "Stock purchase successful.");
+    auto acc = bank->findAccount(accId);
+    if (!acc) {
+        QMessageBox::warning(this, "Error", "Account not found");
+        return;
+    }
+
+    if (market->buyStock(acc->getId(), symbol.toStdString(), amount))
+        QMessageBox::information(this, "Success", "Stock purchased");
     else
-        QMessageBox::warning(this, "Stock", "Purchase failed.");
+        QMessageBox::warning(this, "Error", "Purchase failed");
 }
 
 void StockMarketDialog::on_sellButton_clicked()
@@ -46,8 +43,14 @@ void StockMarketDialog::on_sellButton_clicked()
     QString symbol = ui->symbolLineEdit->text();
     unsigned int amount = ui->amountSpinBox->value();
 
-    if(bank->getStockMarket().sellStock(accId, symbol.toStdString(), amount))
-        QMessageBox::information(this, "Stock", "Stock sale successful.");
+    auto acc = bank->findAccount(accId);
+    if (!acc) {
+        QMessageBox::warning(this, "Error", "Account not found");
+        return;
+    }
+
+    if (market->sellStock(acc->getId(), symbol.toStdString(), amount))
+        QMessageBox::information(this, "Success", "Stock sold");
     else
-        QMessageBox::warning(this, "Stock", "Sale failed.");
+        QMessageBox::warning(this, "Error", "Sell failed");
 }
