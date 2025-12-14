@@ -13,26 +13,6 @@
   <property name="windowTitle">
    <string>Deposit / Withdraw</string>
   </property>
-
-  <!-- Balance display -->
-  <widget class="QLabel" name="balanceLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>460</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Balance: €0.00</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-
-  <!-- List of accounts -->
   <widget class="QListWidget" name="accountList">
    <property name="geometry">
     <rect>
@@ -43,8 +23,6 @@
     </rect>
    </property>
   </widget>
-
-  <!-- Amount input -->
   <widget class="QLineEdit" name="amountLineEdit">
    <property name="geometry">
     <rect>
@@ -58,8 +36,6 @@
     <string>Amount</string>
    </property>
   </widget>
-
-  <!-- Deposit & Withdraw buttons -->
   <widget class="QPushButton" name="depositBtn">
    <property name="geometry">
     <rect>
@@ -73,7 +49,6 @@
     <string>Deposit</string>
    </property>
   </widget>
-
   <widget class="QPushButton" name="withdrawBtn">
    <property name="geometry">
     <rect>
@@ -87,8 +62,6 @@
     <string>Withdraw</string>
    </property>
   </widget>
-
-  <!-- Transaction history -->
   <widget class="QListWidget" name="historyListWidget">
    <property name="geometry">
     <rect>
@@ -99,8 +72,6 @@
     </rect>
    </property>
   </widget>
-
-  <!-- Back button -->
   <widget class="QPushButton" name="backButton">
    <property name="geometry">
     <rect>
@@ -114,7 +85,6 @@
     <string>Back</string>
    </property>
   </widget>
-
  </widget>
  <resources/>
  <connections/>
