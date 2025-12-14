@@ -14,20 +14,18 @@ class LogInDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LogInDialog(MiniBank::Bank* bank, MiniBank::StockMarket* market, QWidget *parent = nullptr);
+    explicit LogInDialog(MiniBank::Bank* bank,
+                         MiniBank::StockMarket* market,
+                         QWidget *parent = nullptr);
     ~LogInDialog();
 
 private slots:
     void on_loginButton_clicked();
-    void on_signupButton_clicked();
 
 private:
     Ui::LogInDialog *ui;
     MiniBank::Bank* bank;
     MiniBank::StockMarket* market;
-    MiniBank::Account* loggedAccount = nullptr;
-
-    void showMessage(const QString& msg);
 };
 
 #endif // LOGINDIALOG_H

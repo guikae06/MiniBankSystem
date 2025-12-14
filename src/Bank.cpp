@@ -45,16 +45,19 @@ Account* Bank::findByNumber(const std::string& accountNumber) const {
 }
 
 // Users
-bool Bank::registerUser(const std::string& username, const std::string& password, Account* account) {
+bool Bank::registerUser(const std::string& username, const std::string& password) {
     std::lock_guard<std::mutex> lock(mtx);
 
-    for (auto& user : users) {
-        if (user.username == username) return false; // username exists
-    }
+    for (auto& user : users)
+        if (user.username == username)
+            return false; // already exists
 
-    users.push_back({username, password, account->getId()});
+    // Create account internally
+    Account* newAccount = createCheckingAccount(username); // add to accounts internally
+    users.push_back({username, password, newAccount->getId()});
     return true;
 }
+
 
 Account* Bank::loginUser(const std::string& username, const std::string& password) const {
     std::lock_guard<std::mutex> lock(mtx);

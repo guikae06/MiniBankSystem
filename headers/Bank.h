@@ -39,7 +39,7 @@ public:
     Account* findByNumber(const std::string& accountNumber) const;
 
     // Users
-    bool registerUser(const std::string& username, const std::string& password, Account* account);
+    bool registerUser(const std::string& username, const std::string& password);
     Account* loginUser(const std::string& username, const std::string& password) const;
 
     std::vector<Account*> snapshot() const; // For GUI

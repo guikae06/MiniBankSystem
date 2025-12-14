@@ -1,7 +1,6 @@
 #include "LogInDialog.h"
 #include "ui_LogInDialog.h"
 #include "MainMenuDialog.h"
-#include <QMessageBox>
 
 LogInDialog::LogInDialog(MiniBank::Bank* b,
                          MiniBank::StockMarket* m,
@@ -12,6 +11,10 @@ LogInDialog::LogInDialog(MiniBank::Bank* b,
     market(m)
 {
     ui->setupUi(this);
+
+    // Disable signup button completely
+    ui->signupButton->setEnabled(false);
+    ui->signupButton->hide();
 }
 
 LogInDialog::~LogInDialog()
@@ -19,37 +22,35 @@ LogInDialog::~LogInDialog()
     delete ui;
 }
 
+// --------------------
+// LOGIN (USERNAME ONLY, NO PASSWORD CHECK)
+// --------------------
 void LogInDialog::on_loginButton_clicked()
 {
     std::string username = ui->usernameLineEdit->text().toStdString();
-    std::string password = ui->passwordLineEdit->text().toStdString();
-
-    loggedAccount = bank->loginUser(username, password);
-    if (!loggedAccount) {
-        QMessageBox::warning(this, "Error", "Invalid username or password");
-        return;
+    if (username.empty()) {
+        username = "DefaultUser";
     }
 
-    // Pass the logged-in account to MainMenuDialog
-    MainMenuDialog menu(bank, market, loggedAccount);
-    menu.exec();
-}
+    MiniBank::Account* account = nullptr;
 
-void LogInDialog::on_signupButton_clicked()
-{
-    std::string username = ui->usernameLineEdit->text().toStdString();
-    std::string password = ui->passwordLineEdit->text().toStdString();
-
-    loggedAccount = bank->createCheckingAccount(username);
-
-    if (!bank->registerUser(username, password, loggedAccount)) {
-        QMessageBox::warning(this, "Error", "Username already exists");
-        return;
+    // Try to find existing account by username
+    auto accounts = bank->getAccounts();
+    for (auto acc : accounts) {
+        if (acc->getOwnerName() == username) {
+            account = acc;
+            break;
+        }
     }
 
-    QMessageBox::information(this, "Success", "Successfully registered");
+    // If account does not exist, create new checking account
+    if (!account) {
+        account = bank->createCheckingAccount(username, 1000.0); // optional starting balance
+    }
 
-    // Pass the logged-in account to MainMenuDialog
-    MainMenuDialog menu(bank, market, loggedAccount);
+    // Open main menu
+    hide();
+    MainMenuDialog menu(bank, market, account);
     menu.exec();
+    show();
 }
