@@ -92,10 +92,7 @@ MiniBank is a Qt-based desktop banking application written in C++ that simulates
 2. Configure the kit (Desktop Qt with C++17).
 3. Build and run the project.
 
-### Building with CMake (Optional)
-```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
-./MiniBank
+# Build instructions
+- Open project in Qt Creator
+- Configure Qt kit
+- Build & Run
